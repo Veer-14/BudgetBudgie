@@ -1,8 +1,10 @@
 package com.example.budgetbudgie
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.bottomnavigation.BottomNavigationView
 
 class HomePage : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -10,6 +12,7 @@ class HomePage : AppCompatActivity() {
         setContentView(R.layout.activity_home_page)
 
         updateBudgie(12) // your current percentage
+        setupBottomNav()
     }
 
 
@@ -22,5 +25,21 @@ class HomePage : AppCompatActivity() {
             else -> img.setImageResource(R.drawable.budgie_sad)
         }
     }
+    private fun setupBottomNav() {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.selectedItemId = R.id.home
 
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.home -> true
+                R.id.balance -> {
+                    startActivity(Intent(this, BalancesActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
+    }
 }
+

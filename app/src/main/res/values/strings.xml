@@ -11,4 +11,11 @@
     <string name="error_username_taken">Username already taken</string>
     <string name="error_invalid_login">Incorrect username or password</string>
     <string name="tagline">Track your expenses with your feathered friend</string>
+    <string name="add_account">Add Account</string>
+    <string name="account_name">Account Name</string>
+    <string name="account_name_hint">e.g. Savings Account</string>
+    <string name="current_balance">Current Balance (R)</string>
+    <string name="balance_hint">0.00</string>
+    <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
 </resources>

@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:background="#1E293B">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_account"
+        android:textColor="#FFFFFF"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/account_name"
+        android:textColor="#9CA3AF"
+        android:textSize="13sp"
+        android:layout_marginBottom="6dp" />
+
+    <EditText
+        android:id="@+id/etAccountName"
+        android:layout_width="260dp"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_input"
+        android:hint="@string/account_name_hint"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9CA3AF"
+        android:paddingHorizontal="16dp"
+        android:inputType="text"
+        android:autofillHints="no"
+        android:layout_marginBottom="16dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/current_balance"
+        android:textColor="#9CA3AF"
+        android:textSize="13sp"
+        android:layout_marginBottom="6dp" />
+
+    <EditText
+        android:id="@+id/etAccountBalance"
+        android:layout_width="260dp"
+        android:layout_height="52dp"
+        android:background="@drawable/bg_input"
+        android:hint="@string/balance_hint"
+        android:textColor="#FFFFFF"
+        android:textColorHint="#9CA3AF"
+        android:paddingHorizontal="16dp"
+        android:inputType="numberDecimal"
+        android:autofillHints="no"
+        android:layout_marginBottom="24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="end"
+        style="?android:attr/buttonBarStyle">
+
+        <Button
+            android:id="@+id/btnCancelAccount"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:text="@string/cancel"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            android:layout_marginEnd="8dp"
+            style="?android:attr/buttonBarButtonStyle" />
+
+        <Button
+            android:id="@+id/btnSaveAccount"
+            android:layout_width="100dp"
+            android:layout_height="48dp"
+            android:text="@string/save"
+            android:textColor="#FFFFFF"
+            android:textSize="14sp"
+            style="?android:attr/buttonBarButtonStyle" />
+
+    </LinearLayout>
+
+</LinearLayout>
