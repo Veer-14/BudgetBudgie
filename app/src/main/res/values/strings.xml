@@ -1,3 +1,14 @@
 <resources>
     <string name="app_name">BudgetBudgie</string>
+    <string name="login">Login</string>
+    <string name="register">Register</string>
+    <string name="username">Username</string>
+    <string name="password">Password</string>
+    <string name="no_account">Don\'t have an account? Register</string>
+    <string name="have_account">Already have an account? Login</string>
+    <string name="error_fill_fields">Please fill in all fields</string>
+    <string name="error_password_short">Password must be at least 6 characters</string>
+    <string name="error_username_taken">Username already taken</string>
+    <string name="error_invalid_login">Incorrect username or password</string>
+    <string name="tagline">Track your expenses with your feathered friend</string>
 </resources>

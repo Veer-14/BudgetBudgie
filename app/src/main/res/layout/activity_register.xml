@@ -48,7 +48,7 @@
             android:layout_marginBottom="6dp" />
 
         <EditText
-            android:id="@+id/etUsername"
+            android:id="@+id/etRegUsername"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/bg_input"
@@ -68,7 +68,7 @@
             android:layout_marginBottom="6dp" />
 
         <EditText
-            android:id="@+id/etPassword"
+            android:id="@+id/etRegPassword"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/bg_input"
@@ -80,7 +80,7 @@
             android:layout_marginBottom="8dp" />
 
         <TextView
-            android:id="@+id/tvError"
+            android:id="@+id/tvRegError"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text=""
@@ -91,20 +91,20 @@
             android:layout_marginBottom="16dp" />
 
         <Button
-            android:id="@+id/btnLogin"
+            android:id="@+id/btnRegister"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/bg_button"
-            android:text="@string/login"
+            android:text="@string/register"
             android:textColor="@color/text_primary"
             android:textSize="16sp"
             android:layout_marginBottom="16dp" />
 
         <TextView
-            android:id="@+id/tvGoToRegister"
+            android:id="@+id/tvGoToLogin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/no_account"
+            android:text="@string/have_account"
             android:textColor="@color/accent_blue"
             android:textSize="14sp"
             android:padding="8dp" />
