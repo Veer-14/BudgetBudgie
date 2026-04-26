@@ -9,103 +9,133 @@
     <!-- Greeting -->
     <TextView
         android:id="@+id/txtGreeting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Hello, John Snow!"
         android:textColor="#FFFFFF"
         android:textSize="22sp"
         android:textStyle="bold"
         android:layout_margin="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        tools:ignore="HardcodedText" />
 
     <TextView
+        android:id="@+id/txtSubtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:text="Here's your budget overview"
         android:textColor="#9CA3AF"
         android:layout_below="@id/txtGreeting"
         android:layout_marginStart="16dp"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        tools:ignore="HardcodedText" />
 
-    <!-- Budget Card -->
-
-    <!-- Total Spent Card -->
-
+    <!-- ===================== BUDGET CARD ===================== -->
     <LinearLayout
         android:id="@+id/cardBudget"
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_below="@id/txtGreeting"
-        android:layout_margin="25dp"
-        android:layout_marginTop="43dp"
-        android:layout_marginBottom="16dp"
+        android:layout_below="@id/txtSubtitle"
+        android:layout_margin="16dp"
         android:background="@drawable/card_bg"
-        android:orientation="vertical"
         android:padding="16dp">
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Monthly Budget Status"
-            android:textColor="#9CA3AF"
-            android:textSize="14sp" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:text="R1754.50"
-            android:textColor="#FFFFFF"
-            android:textSize="26sp"
-            android:textStyle="bold" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Remaining"
-            android:textColor="#9CA3AF" />
-
-        <!-- Progress Bar -->
-        <ProgressBar
-            style="?android:attr/progressBarStyleHorizontal"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="6dp"
-            android:layout_marginTop="20dp"
-            android:max="100"
-            android:progress="12"
-            android:progressTint="#22C55E" />
+            android:layout_height="match_parent"
+            tools:ignore="UselessParent">
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
-            android:orientation="horizontal"
-            android:weightSum="3">
+            <!-- TEXT CONTENT -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="R500 min"
-                android:textColor="#9CA3AF" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Monthly Budget Status"
+                    android:textColor="#B0BEC5"
+                    android:textSize="14sp"
+                    tools:ignore="HardcodedText" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="center"
-                android:text="12% used"
-                android:textColor="#9CA3AF" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="R1754.50"
+                    android:textColor="#FFFFFF"
+                    android:textSize="26sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="8dp"
+                    tools:ignore="HardcodedText" />
 
-            <TextView
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:gravity="end"
-                android:text="R2000 max"
-                android:textColor="#9CA3AF" />
-        </LinearLayout>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Remaining"
+                    android:textColor="#B0BEC5"
+                    tools:ignore="HardcodedText" />
 
+                <ProgressBar
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:layout_marginTop="20dp"
+                    android:max="100"
+                    android:progress="12"
+                    android:progressTint="#22C55E"/>
+
+                <LinearLayout
+                    android:layout_marginTop="8dp"
+                    android:orientation="horizontal"
+                    android:weightSum="3"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="R500 min"
+                        android:textColor="#B0BEC5"
+                        tools:ignore="HardcodedText" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="center"
+                        android:text="12% used"
+                        android:textColor="#9CA3AF"
+                        tools:ignore="HardcodedText,TextContrastCheck" />
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:gravity="end"
+                        android:text="R2000 max"
+                        android:textColor="#B0BEC5"
+                        tools:ignore="HardcodedText" />
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+            <ImageView
+                android:id="@+id/imgBudgie"
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:layout_alignParentEnd="true"
+                android:layout_margin="8dp"
+                android:background="@drawable/budgie_circle_bg"
+                android:padding="8dp"
+                android:src="@drawable/budgie_happy"
+                android:scaleType="fitCenter"
+                tools:ignore="ContentDescription" />
+
+        </RelativeLayout>
     </LinearLayout>
 
+    <!-- ===================== TOTAL SPENT ===================== -->
     <LinearLayout
         android:id="@+id/cardSpent"
         android:orientation="vertical"
@@ -117,22 +147,24 @@
         android:layout_height="120dp">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Total Spent This Month"
             android:textColor="#9CA3AF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            tools:ignore="HardcodedText" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="R245.50"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginTop="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
-    <!-- Total Expenses Card -->
+    <!-- ===================== TOTAL EXPENSES ===================== -->
     <LinearLayout
         android:id="@+id/cardExpenses"
         android:orientation="vertical"
@@ -144,22 +176,24 @@
         android:layout_height="120dp">
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="Total Expenses"
             android:textColor="#9CA3AF"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            tools:ignore="HardcodedText" />
 
         <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="7"
             android:textColor="#FFFFFF"
             android:textSize="24sp"
             android:textStyle="bold"
             android:layout_marginTop="12dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+            tools:ignore="HardcodedText" />
     </LinearLayout>
 
-    <!-- Floating Add Button -->
+    <!-- FAB -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="60dp"
@@ -168,16 +202,20 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
         android:backgroundTint="#1E293B"
+        android:importantForAccessibility="no"
         android:src="@android:drawable/ic_input_add"
-        tools:ignore="SpeakableTextPresentCheck" />
+        tools:ignore="SpeakableTextPresentCheck,ImageContrastCheck" />
 
-    <!-- Bottom Navigation -->
+    <!-- Bottom Nav -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_alignParentBottom="true"
         android:background="#1E293B"
         android:layout_width="match_parent"
         android:layout_height="70dp"
-        app:menu="@menu/bottom_menu"/>
+        app:itemIconTint="#9CA3AF"
+        app:itemTextColor="#9CA3AF"
+        app:menu="@menu/bottom_menu"
+        tools:ignore="VisualLintBottomNav" />
 
 </RelativeLayout>
