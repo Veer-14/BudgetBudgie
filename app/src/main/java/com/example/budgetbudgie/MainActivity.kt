@@ -1,5 +1,5 @@
 package com.example.budgetbudgie
-
+import android.widget.Toast
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
@@ -47,6 +47,11 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (user != null) {
                         tvError.visibility = View.GONE
+                        Toast.makeText(
+                            this@MainActivity,
+                            "Welcome, ${user.username}!",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         startActivity(Intent(this@MainActivity, HomePage::class.java))
                         finish()
                     } else {

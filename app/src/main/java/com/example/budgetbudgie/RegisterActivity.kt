@@ -1,5 +1,5 @@
 package com.example.budgetbudgie
-
+import android.widget.Toast
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
@@ -56,8 +56,15 @@ class RegisterActivity : AppCompatActivity() {
                         tvRegError.visibility = View.VISIBLE
                     } else {
                         lifecycleScope.launch {
-                            db.UserDao().insertUser(User(username = username, password = password))
+                            db.UserDao().insertUser(
+                                User(username = username, password = password)
+                            )
                             runOnUiThread {
+                                Toast.makeText(
+                                    this@RegisterActivity,
+                                    "Account created successfully! Please log in.",
+                                    Toast.LENGTH_LONG
+                                ).show()
                                 finish()
                             }
                         }
