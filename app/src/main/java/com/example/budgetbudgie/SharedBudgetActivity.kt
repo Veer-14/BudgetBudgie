@@ -53,6 +53,11 @@ class SharedBudgetActivity : AppCompatActivity() {
                     finish()
                     true
                 }
+                R.id.expenses -> {
+                    startActivity(Intent(this, ExpensesActivity::class.java))
+                    finish()
+                    true
+                }
                 R.id.analytics -> {
                     startActivity(Intent(this, AnalyticsActivity::class.java))
                     finish()

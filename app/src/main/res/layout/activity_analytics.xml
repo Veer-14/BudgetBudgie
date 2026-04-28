@@ -1,3 +1,9 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="#0F172A"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:background="#0F172A"
     android:layout_width="match_parent"
@@ -182,4 +188,17 @@
         </LinearLayout>
 
     </LinearLayout>
+
 </ScrollView>
+
+<com.google.android.material.bottomnavigation.BottomNavigationView
+android:id="@+id/bottomNav"
+android:layout_alignParentBottom="true"
+android:background="#1E293B"
+android:layout_width="match_parent"
+android:layout_height="70dp"
+app:itemIconTint="#9CA3AF"
+app:itemTextColor="#9CA3AF"
+app:menu="@menu/bottom_menu" />
+
+</RelativeLayout>

@@ -1,6 +1,7 @@
 package com.example.budgetbudgie
 
 import Data.database.AppDatabase
+import android.content.Intent
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -11,7 +12,9 @@ import com.github.mikephil.charting.data.PieData
 import com.github.mikephil.charting.data.PieDataSet
 import com.github.mikephil.charting.data.PieEntry
 import com.github.mikephil.charting.utils.ColorTemplate
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
+import kotlin.jvm.java
 
 class AnalyticsActivity : AppCompatActivity() {
 
@@ -39,6 +42,7 @@ class AnalyticsActivity : AppCompatActivity() {
         categoryContainer = findViewById(R.id.categoryContainer)
 
         loadAnalytics()
+        setupBottomNav()
     }
 
     private fun loadAnalytics() {
@@ -166,5 +170,37 @@ class AnalyticsActivity : AppCompatActivity() {
         row.addView(tvAmount)
 
         return row
+    }
+
+    private fun setupBottomNav() {
+        val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.selectedItemId = R.id.analytics
+
+        bottomNav.setOnItemSelectedListener { item ->
+            when (item.itemId) {
+                R.id.analytics -> true
+                R.id.home -> {
+                    startActivity(Intent(this, HomePage::class.java))
+                    finish()
+                    true
+                }
+                R.id.balance -> {
+                    startActivity(Intent(this, BalancesActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.expenses -> {
+                    startActivity(Intent(this, ExpensesActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.shared -> {
+                    startActivity(Intent(this, SharedBudgetActivity::class.java))
+                    finish()
+                    true
+                }
+                else -> false
+            }
+        }
     }
 }

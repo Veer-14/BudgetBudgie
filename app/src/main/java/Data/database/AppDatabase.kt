@@ -1,6 +1,8 @@
 package Data.database
 
+
 import Data.dao.AccountDao
+import Data.dao.BudgetDao
 import Data.dao.ExpenseDao
 import Data.dao.UserDao
 import Data.dao.SharedBudgetDao
@@ -13,6 +15,10 @@ import com.example.budgetbudgie.data.SharedExpense
 import androidx.room.Room
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import com.example.budgetbudgie.data.Budget
+
+
+
 
 @Database(
     entities = [
@@ -20,9 +26,10 @@ import androidx.room.RoomDatabase
         Expense::class,
         Account::class,
         SharedBudget::class,
-        SharedExpense::class
+        SharedExpense::class,
+        Budget::class
     ],
-    version = 4,
+    version = 5,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
@@ -31,6 +38,8 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun expenseDao(): ExpenseDao
     abstract fun accountDao(): AccountDao
     abstract fun sharedBudgetDao(): SharedBudgetDao
+
+    abstract fun budgetDao(): BudgetDao
 
     companion object {
         @Volatile

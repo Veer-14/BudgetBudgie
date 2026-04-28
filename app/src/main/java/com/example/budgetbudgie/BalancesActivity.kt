@@ -253,12 +253,28 @@ class BalancesActivity : AppCompatActivity() {
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
+                R.id.balance -> true
                 R.id.home -> {
                     startActivity(Intent(this, HomePage::class.java))
                     finish()
                     true
                 }
-                R.id.balance -> true
+                R.id.expenses -> {
+                    startActivity(Intent(this, ExpensesActivity::class.java))
+                    finish()
+                    true
+                }
+
+                R.id.shared -> {
+                    startActivity(Intent(this, SharedBudgetActivity::class.java))
+                    finish()
+                    true
+                }
+                R.id.analytics -> {
+                    startActivity(Intent(this, AnalyticsActivity::class.java))
+                    finish()
+                    true
+                }
                 else -> false
             }
         }

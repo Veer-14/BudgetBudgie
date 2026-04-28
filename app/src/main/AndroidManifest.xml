@@ -12,6 +12,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.BudgetBudgie">
         <activity
+            android:name=".AddExpenseActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ExpensesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.BudgetBudgie" />
+        <activity
+            android:name=".DashboardCustomizationActivity"
+            android:exported="false" />
+        <activity
             android:name=".AnalyticsActivity"
             android:exported="false" />
         <activity
