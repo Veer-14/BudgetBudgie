@@ -48,13 +48,19 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (user != null) {
                         tvError.visibility = View.GONE
+
                         Toast.makeText(
                             this@MainActivity,
                             "Welcome, ${user.username}!",
                             Toast.LENGTH_SHORT
                         ).show()
-                        startActivity(Intent(this@MainActivity, HomePage::class.java))
+
+                        val intent = Intent(this@MainActivity, HomePage::class.java)
+                        intent.putExtra("username", user.username) // ✅ SEND IT HERE
+                        startActivity(intent)
+
                         finish()
+
                     } else {
                         tvError.setText(R.string.error_invalid_login)
                         tvError.visibility = View.VISIBLE

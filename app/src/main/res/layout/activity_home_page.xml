@@ -50,7 +50,7 @@
                 android:id="@+id/txtGreeting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Hello, John Snow!"
+                android:text="Hello,"
                 android:textColor="#FFFFFF"
                 android:textSize="22sp"
                 android:textStyle="bold"
@@ -89,9 +89,10 @@
                             android:textColor="#B0BEC5"/>
 
                         <TextView
+                            android:id="@+id/txtRemaining"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="R1754.50"
+                            android:text="R0.00"
                             android:textColor="#FFFFFF"
                             android:textSize="26sp"
                             android:textStyle="bold"
@@ -113,6 +114,7 @@
                             android:textColor="#FFFFFF"/>
 
                         <ProgressBar
+                            android:id="@+id/progressBar"
                             style="?android:attr/progressBarStyleHorizontal"
                             android:layout_width="match_parent"
                             android:layout_height="6dp"
@@ -138,6 +140,7 @@
 
                             <TextView
 
+                                android:id="@+id/txtPercentage"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="1"
@@ -187,6 +190,7 @@
                     android:textColor="#9CA3AF"/>
 
                 <TextView
+                    android:id="@+id/txtTotalSpent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="R245.50"
@@ -213,6 +217,7 @@
                     android:textColor="#9CA3AF"/>
 
                 <TextView
+                    android:id="@+id/txtExpenseCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="7"

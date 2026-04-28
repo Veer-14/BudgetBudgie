@@ -14,20 +14,26 @@ import androidx.lifecycle.lifecycleScope
 import com.example.budgetbudgie.data.Budget
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
+import android.animation.ObjectAnimator
+import android.view.animation.DecelerateInterpolator
 
 class HomePage : AppCompatActivity() {
+
+    private var username: String? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
+
+        username = intent.getStringExtra("username")
 
         updateBudgie(12)
         setupBottomNav()
         setupTopButtons()
         setupQuickActions()
         loadRecentExpenses()
-        loadBudget()
-         findViewById<View>(R.id.btnSetBudget).setOnClickListener {
+        loadDashboard()
+        findViewById<View>(R.id.btnSetBudget).setOnClickListener {
             showBudgetDialog()
         }
 
@@ -41,8 +47,8 @@ class HomePage : AppCompatActivity() {
         val img = findViewById<ImageView>(R.id.imgBudgie)
 
         when {
-            progress < 30 -> img.setImageResource(R.drawable.budgie_happy)
-            progress < 70 -> img.setImageResource(R.drawable.budgie_ok)
+            progress < 50 -> img.setImageResource(R.drawable.budgie_happy)
+            progress < 80 -> img.setImageResource(R.drawable.budgie_ok)
             else -> img.setImageResource(R.drawable.budgie_sad)
         }
     }
@@ -66,7 +72,7 @@ class HomePage : AppCompatActivity() {
 
                 lifecycleScope.launch {
                     db.budgetDao().insertBudget(Budget(1, min, max))
-                    loadBudget()
+                    loadDashboard()
                 }
             }
             .setNegativeButton("Cancel", null)
@@ -103,19 +109,79 @@ class HomePage : AppCompatActivity() {
     }
 
     // ---------------- BUDGET LOAD ----------------
-    private fun loadBudget() {
+    private fun loadDashboard() {
+
         val minText = findViewById<TextView>(R.id.txtMin)
         val maxText = findViewById<TextView>(R.id.txtMax)
+        val remainingText = findViewById<TextView>(R.id.txtRemaining)
+        val percentText = findViewById<TextView>(R.id.txtPercentage)
+        val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressBar)
+        val totalSpentText = findViewById<TextView>(R.id.txtTotalSpent)
+        val expenseCountText = findViewById<TextView>(R.id.txtExpenseCount)
 
         val db = AppDatabase.getDatabase(this)
 
         lifecycleScope.launch {
-            val budget = db.budgetDao().getBudget()
+            val greeting = findViewById<TextView>(R.id.txtGreeting)
+            greeting.text = "Hello, $username"
 
-            budget?.let {
-                minText.text = "R${it.minAmount} min"
-                maxText.text = "R${it.maxAmount} max"
+            val budget = db.budgetDao().getBudget()
+            val expenses = db.expenseDao().getAllExpenses()
+
+            if (budget == null) return@launch
+
+            val max = budget.maxAmount
+            val min = budget.minAmount
+
+
+            val totalSpent = expenses.sumOf { it.amount }
+
+
+            val count = expenses.size
+
+
+            val remaining = max - totalSpent
+
+
+            val percentUsed = if (max > 0) {
+
+                ((totalSpent / max) * 100).toInt()
+            } else 0
+
+            val color = when {
+                percentUsed < 50 -> android.graphics.Color.parseColor("#22C55E") // green
+                percentUsed < 80 -> android.graphics.Color.parseColor("#F59E0B") // orange
+                else -> android.graphics.Color.parseColor("#EF4444") // red
             }
+
+            // ---- UPDATE UI ----
+            minText.text = "R%.2f min".format(min)
+            maxText.text = "R%.2f max".format(max)
+
+            remainingText.text = "R%.2f".format(remaining)
+            percentText.text = "$percentUsed% used"
+
+            progressBar.alpha = 0.6f
+            progressBar.animate()
+                .alpha(1f)
+                .setDuration(400)
+                .start()
+
+            progressBar.progress = 0
+            progressBar.progressTintList = android.content.res.ColorStateList.valueOf(color)
+
+            progressBar.postDelayed({
+                val animation = ObjectAnimator.ofInt(progressBar, "progress", 0, percentUsed)
+                animation.duration = 900
+                animation.interpolator = DecelerateInterpolator()
+                animation.start()
+            }, 150)
+
+            totalSpentText.text = "R%.2f".format(totalSpent)
+            expenseCountText.text = count.toString()
+
+            // Update budgie based on usage
+            updateBudgie(percentUsed)
         }
     }
 
@@ -199,6 +265,6 @@ class HomePage : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        loadBudget()
+        loadDashboard()
     }
 }
