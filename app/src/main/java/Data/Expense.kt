@@ -12,6 +12,6 @@ data class Expense(
     val amount: Double,
     val date: String,
     val description: String,
-    val photoUri: String? = null
+    val imageUri: String? = null
 
 )
