@@ -93,7 +93,7 @@ class BudgetBudgieUnitTest {
 
     @Test
     fun account_invalidBalance_fails_parsing() {
-        val balanceText = "not-a-number"
+        val balanceText = "not a number"
         val balance = balanceText.toDoubleOrNull()
         assertNull("Non numeric balance should return null", balance)
     }
