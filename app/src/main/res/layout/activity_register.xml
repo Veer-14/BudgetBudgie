@@ -24,7 +24,7 @@
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:background="@drawable/bg_circle"
-                android:src="@drawable/budgie_normal"
+                android:src="@drawable/budgie_happy"
                 android:scaleType="fitCenter"
                 android:padding="12dp"
                 android:importantForAccessibility="no" />

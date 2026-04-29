@@ -5,167 +5,164 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- Scroll content -->
-    <ScrollView
+    <!-- MAIN CONTENT CONTAINER -->
+    <LinearLayout
+        android:orientation="vertical"
+        android:padding="16dp"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav">
 
-        <LinearLayout
-            android:orientation="vertical"
-            android:padding="16dp"
+        <!-- TITLE -->
+        <TextView
+            android:text="Expenses"
+            android:textSize="26sp"
+            android:textStyle="bold"
+            android:textColor="@android:color/white"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+
+        <!-- TOTAL CARD -->
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="16dp"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#1E293B"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#3B82F6">
 
-            <!-- TITLE -->
-            <TextView
-                android:text="Expenses"
-                android:textSize="26sp"
-                android:textStyle="bold"
-                android:textColor="@android:color/white"
-                android:layout_height="wrap_content"
-                android:layout_width="wrap_content"/>
-
-            <!-- TOTAL CARD -->
-            <androidx.cardview.widget.CardView
-                android:layout_marginTop="16dp"
+            <LinearLayout
+                android:padding="16dp"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="#1E293B"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="2dp"
-                app:strokeColor="#3B82F6">
+                android:layout_height="wrap_content">
 
-                <LinearLayout
-                    android:padding="16dp"
-                    android:orientation="vertical"
+                <TextView
+                    android:text="Total for Selected Period"
+                    android:textColor="#94A3B8"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    android:text="R0.00"
+                    android:textSize="28sp"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- FILTER CARD -->
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#334155"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#3B82F6">
+
+            <LinearLayout
+                android:padding="16dp"
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <EditText
+                    android:id="@+id/etStartDate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="Start Date"
+                    android:minHeight="48dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#94A3B8" />
 
-                    <TextView
-                        android:text="Total for Selected Period"
-                        android:textColor="#94A3B8"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"/>
-
-                    <TextView
-                        android:id="@+id/tvTotal"
-                        android:text="R0.00"
-                        android:textSize="28sp"
-                        android:textColor="@android:color/white"
-                        android:layout_height="wrap_content"
-                        android:layout_width="wrap_content"/>
-
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- FILTER CARD -->
-            <androidx.cardview.widget.CardView
-                android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="#334155"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="2dp"
-                app:strokeColor="#3B82F6">
-
-                <LinearLayout
-                    android:padding="16dp"
-                    android:orientation="vertical"
+                <EditText
+                    android:id="@+id/etEndDate"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"
+                    android:focusable="false"
+                    android:hint="End Date"
+                    android:minHeight="48dp"
+                    android:textColor="@android:color/white"
+                    android:textColorHint="#94A3B8" />
 
-
-
-                    <EditText
-                        android:id="@+id/etStartDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:hint="Start Date"
-                        android:minHeight="48dp"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#94A3B8" />
-
-                    <EditText
-                        android:id="@+id/etEndDate"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:focusable="false"
-                        android:hint="End Date"
-                        android:minHeight="48dp"
-                        android:textColor="@android:color/white"
-                        android:textColorHint="#94A3B8" />
-
-                    <Button
-                        android:id="@+id/btnFilter"
-                        android:text="Apply Filter"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_marginTop="16dp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="#1E293B"
-                app:cardCornerRadius="20dp"
-                app:cardElevation="0dp"
-                app:strokeWidth="2dp"
-                app:strokeColor="#3B82F6">
-
-                <LinearLayout
-                    android:padding="16dp"
-                    android:orientation="vertical"
+                <Button
+                    android:id="@+id/btnFilter"
+                    android:text="Apply Filter"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
+                    android:layout_height="wrap_content"/>
+            </LinearLayout>
 
-                    <TextView
-                        android:text="Category Breakdown"
-                        android:textStyle="bold"
-                        android:textColor="@android:color/white"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
+        </androidx.cardview.widget.CardView>
 
-                    <TextView
-                        android:id="@+id/tvCategoryTotals"
-                        android:text="No data yet"
-                        android:textColor="#94A3B8"
-                        android:layout_marginTop="8dp"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"/>
+        <!-- CATEGORY CARD -->
+        <androidx.cardview.widget.CardView
+            android:layout_marginTop="16dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:cardBackgroundColor="#1E293B"
+            app:cardCornerRadius="20dp"
+            app:cardElevation="0dp"
+            app:strokeWidth="2dp"
+            app:strokeColor="#3B82F6">
 
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <!-- LIST -->
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerExpenses"
-                android:layout_marginTop="16dp"
+            <LinearLayout
+                android:padding="16dp"
+                android:orientation="vertical"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content">
 
-        </LinearLayout>
+                <TextView
+                    android:text="Category Breakdown"
+                    android:textStyle="bold"
+                    android:textColor="@android:color/white"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
 
-    </ScrollView>
+                <TextView
+                    android:id="@+id/tvCategoryTotals"
+                    android:text="No data yet"
+                    android:textColor="#94A3B8"
+                    android:layout_marginTop="8dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+        </androidx.cardview.widget.CardView>
+
+        <!-- EXPENSE LIST -->
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recyclerExpenses"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginTop="16dp"
+            android:paddingBottom="120dp"
+            android:clipToPadding="false"/>
+
+    </LinearLayout>
 
     <!-- FLOATING BUTTON -->
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/bottomNav"
+        android:layout_above="@id/bottomNav"
         android:layout_centerHorizontal="true"
         android:layout_margin="20dp"
-        android:layout_marginBottom="585dp"
         android:src="@android:drawable/ic_input_add"
         tools:ignore="SpeakableTextPresentCheck" />
 
+    <!-- BOTTOM NAV -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
