@@ -205,12 +205,13 @@
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
-        android:layout_alignParentBottom="true"
-        android:background="#1E293B"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
-        app:itemIconTint="#9CA3AF"
-        app:itemTextColor="#9CA3AF"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#0F172A"
+        app:itemIconTint="@color/bottom_nav_colors"
+        app:itemTextColor="@color/bottom_nav_colors"
+        app:labelVisibilityMode="labeled"
         app:menu="@menu/bottom_menu" />
 
 </RelativeLayout>

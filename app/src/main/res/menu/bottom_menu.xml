@@ -2,27 +2,26 @@
 
     <item
         android:id="@+id/home"
-        android:icon="@android:drawable/ic_menu_view"
-        android:title="Home"/>
+        android:title="Home"
+        android:icon="@drawable/ic_home"/>
 
     <item
         android:id="@+id/balance"
-        android:icon="@android:drawable/ic_menu_agenda"
-        android:title="Balances"/>
+        android:title="Balance"
+        android:icon="@drawable/ic_wallet"/>
 
     <item
         android:id="@+id/expenses"
-        android:icon="@android:drawable/ic_menu_info_details"
-        android:title="Expenses"/>
+        android:title="Expenses"
+        android:icon="@drawable/ic_reciept"/>
 
     <item
         android:id="@+id/shared"
-        android:icon="@android:drawable/ic_menu_share"
-        android:title="Shared"/>
+        android:title="Shared"
+        android:icon="@drawable/ic_share"/>
 
     <item
         android:id="@+id/analytics"
-        android:icon="@android:drawable/ic_menu_sort_by_size"
-        android:title="Analytics"/>
-
+        android:title="Analytics"
+        android:icon="@drawable/ic_chart"/>
 </menu>

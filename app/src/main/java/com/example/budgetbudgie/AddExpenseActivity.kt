@@ -14,6 +14,7 @@ import Data.database.AppDatabase
 import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import kotlinx.coroutines.launch
+import java.io.File
 
 class AddExpenseActivity : AppCompatActivity() {
 
@@ -45,8 +46,13 @@ class AddExpenseActivity : AppCompatActivity() {
             ActivityResultContracts.GetContent()
         ) { uri: Uri? ->
             uri?.let {
-                selectedImageUri = it.toString()
-                imgPreview.setImageURI(it)
+
+                val savedPath = saveImageToInternalStorage(it)
+
+                if (savedPath != null) {
+                    selectedImageUri = savedPath
+                    imgPreview.setImageURI(Uri.fromFile(File(savedPath)))
+                }
             }
         }
 
@@ -84,6 +90,24 @@ class AddExpenseActivity : AppCompatActivity() {
         }
         btnCancel.setOnClickListener {
             finish()
+        }
+    }
+    private fun saveImageToInternalStorage(uri: Uri): String? {
+        return try {
+            val inputStream = contentResolver.openInputStream(uri)
+            val fileName = "expense_${System.currentTimeMillis()}.jpg"
+            val file = File(filesDir, fileName)
+            val outputStream = file.outputStream()
+
+            inputStream?.copyTo(outputStream)
+
+            inputStream?.close()
+            outputStream.close()
+
+            file.absolutePath
+        } catch (e: Exception) {
+            e.printStackTrace()
+            null
         }
     }
     private fun showDatePicker(target: EditText) {

@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:background="#0F172A"
+    android:paddingTop="16dp"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -19,12 +20,42 @@
             android:orientation="vertical">
 
             <!-- TOP BAR -->
+
+            <!-- GREETING -->
+            <!-- TOP ROW: GREETING + ACTION BUTTONS -->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:gravity="end">
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
 
+                <!-- GREETING -->
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/txtGreeting"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Hello,"
+                        android:textColor="#FFFFFF"
+                        android:textSize="22sp"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Here's your budget overview"
+                        android:textColor="#9CA3AF" />
+                </LinearLayout>
+
+                <!-- BUTTONS -->
                 <ImageView
                     android:id="@+id/btnCustomize"
                     android:layout_width="40dp"
@@ -33,7 +64,7 @@
                     android:background="@drawable/icon_circle_bg"
                     android:padding="8dp"
                     android:src="@android:drawable/ic_menu_manage"
-                    app:tint="#FFFFFF"/>
+                    app:tint="#FFFFFF" />
 
                 <ImageView
                     android:id="@+id/btnLogout"
@@ -42,27 +73,9 @@
                     android:background="@drawable/icon_circle_bg"
                     android:padding="8dp"
                     android:src="@android:drawable/ic_lock_power_off"
-                    app:tint="#FFFFFF"/>
+                    app:tint="#FFFFFF" />
+
             </LinearLayout>
-
-            <!-- GREETING -->
-            <TextView
-                android:id="@+id/txtGreeting"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Hello,"
-                android:textColor="#FFFFFF"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                android:layout_marginStart="20dp"/>
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Here's your budget overview"
-                android:textColor="#9CA3AF"
-                android:layout_marginStart="20dp"
-                android:layout_marginBottom="10dp"/>
 
             <!-- ================= BUDGET CARD (UNCHANGED DESIGN) ================= -->
             <LinearLayout
@@ -167,9 +180,11 @@
                         android:layout_height="70dp"
                         android:layout_alignParentEnd="true"
                         android:layout_margin="8dp"
-                        android:background="@drawable/budgie_circle_bg"
-                        android:padding="8dp"
-                        android:src="@drawable/budgie_happy"/>
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/budgie_happy"
+                        android:clipToOutline="true"
+                        android:outlineProvider="background"
+                        android:background="@drawable/circle_outline"/>
                 </RelativeLayout>
             </LinearLayout>
 
@@ -193,7 +208,7 @@
                     android:id="@+id/txtTotalSpent"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="R245.50"
+                    android:text="R0"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -220,7 +235,7 @@
                     android:id="@+id/txtExpenseCount"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="7"
+                    android:text="0"
                     android:textColor="#FFFFFF"
                     android:textSize="24sp"
                     android:textStyle="bold"
@@ -301,6 +316,67 @@
 
             </LinearLayout>
 
+            <!-- GAMIFICATION CARD -->
+            <LinearLayout
+                android:id="@+id/rewardsCard"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="16dp"
+                android:background="@drawable/card_bg"
+                android:padding="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:text="Feed the Budgie 🐦"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <!-- LEVEL -->
+                <TextView
+                    android:id="@+id/txtLevel"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Level 1"
+                    android:textColor="#22C55E"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="6dp"/>
+
+                <!-- SEEDS -->
+                <TextView
+                    android:id="@+id/txtSeeds"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Seeds: 0 🌱"
+                    android:textColor="#9CA3AF"
+                    android:layout_marginTop="4dp"/>
+
+                <!-- PROGRESS BAR -->
+                <ProgressBar
+                    android:id="@+id/progressSeeds"
+                    style="?android:attr/progressBarStyleHorizontal"
+                    android:layout_width="match_parent"
+                    android:layout_height="6dp"
+                    android:layout_marginTop="12dp"
+                    android:max="100"
+                    android:progress="20"
+                    android:progressTint="#22C55E"/>
+
+                <!-- BUTTON -->
+                <Button
+                    android:id="@+id/btnViewRewards"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="View Rewards"
+                    android:layout_marginTop="12dp"
+                    android:backgroundTint="#334155"
+                    android:textColor="#FFFFFF"/>
+
+            </LinearLayout>
+
 
             <!-- RECENT -->
             <LinearLayout
@@ -347,11 +423,12 @@
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"
-        android:layout_height="70dp"
+        android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
-        android:background="#1E293B"
-        app:itemIconTint="#9CA3AF"
-        app:itemTextColor="#9CA3AF"
-        app:menu="@menu/bottom_menu"/>
+        android:background="#0F172A"
+        app:itemIconTint="@color/bottom_nav_colors"
+        app:itemTextColor="@color/bottom_nav_colors"
+        app:labelVisibilityMode="labeled"
+        app:menu="@menu/bottom_menu" />
 
 </RelativeLayout>

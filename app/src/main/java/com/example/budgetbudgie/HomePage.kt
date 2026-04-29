@@ -15,17 +15,35 @@ import com.example.budgetbudgie.data.Budget
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.coroutines.launch
 import android.animation.ObjectAnimator
+import android.content.res.ColorStateList
 import android.view.animation.DecelerateInterpolator
+import kotlin.jvm.java
 
 class HomePage : AppCompatActivity() {
 
     private var username: String? = null
 
+    // ✅ FIX: class-level references for card visibility
+    private lateinit var cardBudget: View
+    private lateinit var cardSpent: View
+    private lateinit var cardExpenses: View
+    private lateinit var cardQuick: View
+    private lateinit var cardRecent: View
+    private lateinit var rewardsCard: View
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_home_page)
 
-        username = intent.getStringExtra("username")
+
+
+        // ✅ FIX: initialize cards properly
+        cardBudget = findViewById(R.id.cardBudget)
+        cardSpent = findViewById(R.id.cardSpent)
+        cardExpenses = findViewById(R.id.cardExpenses)
+        cardQuick = findViewById(R.id.cardQuickActions)
+        cardRecent = findViewById(R.id.cardRecent)
+        rewardsCard = findViewById(R.id.rewardsCard)
 
         updateBudgie(12)
         setupBottomNav()
@@ -33,15 +51,24 @@ class HomePage : AppCompatActivity() {
         setupQuickActions()
         loadRecentExpenses()
         loadDashboard()
+
+
         findViewById<View>(R.id.btnSetBudget).setOnClickListener {
             showBudgetDialog()
+        }
+
+        findViewById<View>(R.id.btnViewRewards).setOnClickListener {
+            startActivity(Intent(this, RewardsActivity::class.java))
         }
 
         findViewById<View>(R.id.fabAdd).setOnClickListener {
             startActivity(Intent(this, AddExpenseActivity::class.java))
         }
     }
-
+    private fun getUsername(): String {
+        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+        return prefs.getString("username", "User") ?: "User"
+    }
     // ---------------- BUDGIE IMAGE ----------------
     private fun updateBudgie(progress: Int) {
         val img = findViewById<ImageView>(R.id.imgBudgie)
@@ -108,7 +135,7 @@ class HomePage : AppCompatActivity() {
         }
     }
 
-    // ---------------- BUDGET LOAD ----------------
+    // ---------------- DASHBOARD ----------------
     private fun loadDashboard() {
 
         val minText = findViewById<TextView>(R.id.txtMin)
@@ -118,12 +145,35 @@ class HomePage : AppCompatActivity() {
         val progressBar = findViewById<android.widget.ProgressBar>(R.id.progressBar)
         val totalSpentText = findViewById<TextView>(R.id.txtTotalSpent)
         val expenseCountText = findViewById<TextView>(R.id.txtExpenseCount)
+        val seedsText = findViewById<TextView>(R.id.txtSeeds)
+        val levelText = findViewById<TextView>(R.id.txtLevel)
+        val progressSeeds = findViewById<android.widget.ProgressBar>(R.id.progressSeeds)
+
+        val prefs = getSharedPreferences("dashboard_prefs", MODE_PRIVATE)
+
+
+        val showBudget = prefs.getBoolean("show_budget", true)
+        val showSpent = prefs.getBoolean("show_spent", true)
+        val showExpenses = prefs.getBoolean("show_expenses", true)
+        val showQuick = prefs.getBoolean("show_quick", true)
+        val showRecent = prefs.getBoolean("show_recent", true)
+        val showRewards = prefs.getBoolean("show_rewards", true)
+
+
+        cardBudget.visibility = if (showBudget) View.VISIBLE else View.GONE
+        cardSpent.visibility = if (showSpent) View.VISIBLE else View.GONE
+        cardExpenses.visibility = if (showExpenses) View.VISIBLE else View.GONE
+        cardQuick.visibility = if (showQuick) View.VISIBLE else View.GONE
+        cardRecent.visibility = if (showRecent) View.VISIBLE else View.GONE
+        rewardsCard.visibility = if (showRewards) View.VISIBLE else View.GONE
 
         val db = AppDatabase.getDatabase(this)
 
         lifecycleScope.launch {
+
+
             val greeting = findViewById<TextView>(R.id.txtGreeting)
-            greeting.text = "Hello, $username"
+            greeting.text = "Hello, ${getUsername()}"
 
             val budget = db.budgetDao().getBudget()
             val expenses = db.expenseDao().getAllExpenses()
@@ -133,57 +183,55 @@ class HomePage : AppCompatActivity() {
             val max = budget.maxAmount
             val min = budget.minAmount
 
-
             val totalSpent = expenses.sumOf { it.amount }
-
-
             val count = expenses.size
-
-
             val remaining = max - totalSpent
 
-
             val percentUsed = if (max > 0) {
-
                 ((totalSpent / max) * 100).toInt()
             } else 0
 
+            var seeds = 0
+            seeds += count * 5
+            if (percentUsed < 80) seeds += 20
+            if (percentUsed < 50) seeds += 30
+
+            val level = (seeds / 100) + 1
+            val progress = seeds % 100
+
+            val gamePrefs = getSharedPreferences("game", MODE_PRIVATE)
+            gamePrefs.edit().putInt("seeds", seeds).apply()
+
+            seedsText.text = "Seeds: $seeds 🌱"
+            levelText.text = "Level $level"
+            progressSeeds.progress = progress
+
             val color = when {
-                percentUsed < 50 -> android.graphics.Color.parseColor("#22C55E") // green
-                percentUsed < 80 -> android.graphics.Color.parseColor("#F59E0B") // orange
-                else -> android.graphics.Color.parseColor("#EF4444") // red
+                percentUsed < 50 -> android.graphics.Color.parseColor("#22C55E")
+                percentUsed < 80 -> android.graphics.Color.parseColor("#F59E0B")
+                else -> android.graphics.Color.parseColor("#EF4444")
             }
 
-            // ---- UPDATE UI ----
             minText.text = "R%.2f min".format(min)
             maxText.text = "R%.2f max".format(max)
-
             remainingText.text = "R%.2f".format(remaining)
             percentText.text = "$percentUsed% used"
 
-            progressBar.alpha = 0.6f
-            progressBar.animate()
-                .alpha(1f)
-                .setDuration(400)
-                .start()
+            progressBar.progressTintList = ColorStateList.valueOf(color)
 
-            progressBar.progress = 0
-            progressBar.progressTintList = android.content.res.ColorStateList.valueOf(color)
-
-            progressBar.postDelayed({
-                val animation = ObjectAnimator.ofInt(progressBar, "progress", 0, percentUsed)
-                animation.duration = 900
-                animation.interpolator = DecelerateInterpolator()
-                animation.start()
-            }, 150)
+            ObjectAnimator.ofInt(progressBar, "progress", 0, percentUsed).apply {
+                duration = 900
+                interpolator = DecelerateInterpolator()
+                start()
+            }
 
             totalSpentText.text = "R%.2f".format(totalSpent)
             expenseCountText.text = count.toString()
 
-            // Update budgie based on usage
             updateBudgie(percentUsed)
         }
     }
+
 
     // ---------------- BOTTOM NAV ----------------
     private fun setupBottomNav() {
@@ -263,8 +311,11 @@ class HomePage : AppCompatActivity() {
         }
     }
 
+
+
     override fun onResume() {
         super.onResume()
+
         loadDashboard()
     }
 }

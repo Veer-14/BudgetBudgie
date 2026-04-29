@@ -48,6 +48,8 @@ class MainActivity : AppCompatActivity() {
                 runOnUiThread {
                     if (user != null) {
                         tvError.visibility = View.GONE
+                        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        prefs.edit().putString("username", user.username).apply()
 
                         Toast.makeText(
                             this@MainActivity,
@@ -56,7 +58,7 @@ class MainActivity : AppCompatActivity() {
                         ).show()
 
                         val intent = Intent(this@MainActivity, HomePage::class.java)
-                        intent.putExtra("username", user.username) // ✅ SEND IT HERE
+                       // intent.putExtra("username", user.username) // ✅ SEND IT HERE
                         startActivity(intent)
 
                         finish()

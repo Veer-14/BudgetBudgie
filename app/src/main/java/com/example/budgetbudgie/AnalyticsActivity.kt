@@ -19,13 +19,11 @@ import kotlinx.coroutines.launch
 class AnalyticsActivity : AppCompatActivity() {
 
     private lateinit var db: AppDatabase
-
     private lateinit var tvTotalBudget: TextView
     private lateinit var tvTotalSpent: TextView
     private lateinit var tvRemaining: TextView
     private lateinit var tvBudgetCount: TextView
     private lateinit var tvExpenseCount: TextView
-
     private lateinit var pieChart: PieChart
     private lateinit var categoryContainer: LinearLayout
 
@@ -146,6 +144,7 @@ class AnalyticsActivity : AppCompatActivity() {
 
     private fun setupBottomNav() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
+        bottomNav.selectedItemId = R.id.analytics
 
         bottomNav.setOnItemSelectedListener {
             when (it.itemId) {

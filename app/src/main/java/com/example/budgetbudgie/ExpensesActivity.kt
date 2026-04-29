@@ -33,6 +33,13 @@ class ExpensesActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_expenses)
 
+        findViewById<com.google.android.material.floatingactionbutton.FloatingActionButton>(R.id.fabAdd)
+            .setOnClickListener {
+                startActivity(Intent(this, AddExpenseActivity::class.java))
+            }
+
+        setupBottomNav()
+
         recyclerView = findViewById(R.id.recyclerExpenses)
         tvTotal = findViewById(R.id.tvTotal)
         tvCategoryTotals = findViewById(R.id.tvCategoryTotals)

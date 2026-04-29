@@ -9,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetbudgie.R
 import com.example.budgetbudgie.data.Expense
+import java.io.File
 
 class ExpenseAdapter(
     private var expenses: List<Expense>
@@ -35,11 +36,22 @@ class ExpenseAdapter(
         holder.amount.text = "R%.2f".format(expense.amount)
         holder.category.text = "Category: ${expense.category}"
         holder.date.text = "Date: ${expense.date}"
+
+        // 🔥 IMPORTANT: reset first (prevents wrong images)
+        holder.image.setImageDrawable(null)
+        holder.image.visibility = View.GONE
+
         if (!expense.imageUri.isNullOrEmpty()) {
             holder.image.visibility = View.VISIBLE
-            holder.image.setImageURI(Uri.parse(expense.imageUri))
-        } else {
-            holder.image.visibility = View.GONE
+            expense.imageUri?.let {
+                val file = File(it)
+                if (file.exists()) {
+                    holder.image.setImageURI(Uri.fromFile(file))
+                    holder.image.visibility = View.VISIBLE
+                } else {
+                    holder.image.visibility = View.GONE
+                }
+            }
         }
     }
 

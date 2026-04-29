@@ -18,6 +18,7 @@ class DashboardCustomizationActivity : AppCompatActivity() {
         val checkExpenses = findViewById<CheckBox>(R.id.checkExpenses)
         val checkQuick = findViewById<CheckBox>(R.id.checkQuick)
         val checkRecent = findViewById<CheckBox>(R.id.checkRecent)
+        val checkRewards = findViewById<CheckBox>(R.id.checkRewards)
 
         val btnSave = findViewById<Button>(R.id.btnSave)
 
@@ -27,6 +28,7 @@ class DashboardCustomizationActivity : AppCompatActivity() {
         checkExpenses.isChecked = prefs.getBoolean("show_expenses", true)
         checkQuick.isChecked = prefs.getBoolean("show_quick", true)
         checkRecent.isChecked = prefs.getBoolean("show_recent", true)
+        checkRewards.isChecked = prefs.getBoolean("show_rewards", true)
 
         // SAVE values
         btnSave.setOnClickListener {
@@ -37,6 +39,7 @@ class DashboardCustomizationActivity : AppCompatActivity() {
             editor.putBoolean("show_expenses", checkExpenses.isChecked)
             editor.putBoolean("show_quick", checkQuick.isChecked)
             editor.putBoolean("show_recent", checkRecent.isChecked)
+            editor.putBoolean("show_rewards", checkRewards.isChecked)
 
             editor.apply()
             finish()
