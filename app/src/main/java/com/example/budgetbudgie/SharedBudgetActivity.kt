@@ -99,7 +99,7 @@ class SharedBudgetActivity : AppCompatActivity() {
                     tvTotalBudgetDetail.text = "R${budget.totalBudget}"
 
                     membersContainer.removeAllViews()
-                    membersContainer.addView(createMemberRow("John Snow", "Creator"))
+                    membersContainer.addView(createMemberRow("You", "Owner"))
 
                     lifecycleScope.launch {
                         val expenses = db.sharedBudgetDao().getExpensesForBudget(budget.id)
@@ -173,11 +173,14 @@ class SharedBudgetActivity : AppCompatActivity() {
     }
 
     private fun createExpenseRow(exp: SharedExpense): LinearLayout {
+
         val row = LinearLayout(this)
         row.orientation = LinearLayout.HORIZONTAL
         row.setBackgroundColor(0xFF1E293B.toInt())
+
         val dp8 = (8 * resources.displayMetrics.density).toInt()
         row.setPadding(dp8, dp8, dp8, dp8)
+
         val rowParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -185,9 +188,11 @@ class SharedBudgetActivity : AppCompatActivity() {
         rowParams.bottomMargin = dp8
         row.layoutParams = rowParams
 
+        // ICON
         val icon = TextView(this)
         icon.text = "📄"
         icon.textSize = 20f
+
         val iconParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -195,9 +200,11 @@ class SharedBudgetActivity : AppCompatActivity() {
         iconParams.marginEnd = dp8
         icon.layoutParams = iconParams
 
+        // MIDDLE TEXT
         val middleCol = LinearLayout(this)
         middleCol.orientation = LinearLayout.VERTICAL
-        middleCol.layoutParams = LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
+        middleCol.layoutParams =
+            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT, 1f)
 
         val tvDesc = TextView(this)
         tvDesc.text = exp.description
@@ -206,18 +213,20 @@ class SharedBudgetActivity : AppCompatActivity() {
         tvDesc.setTypeface(null, android.graphics.Typeface.BOLD)
 
         val tvMeta = TextView(this)
-        tvMeta.text = "John Snow"
+        tvMeta.text = "Member"
         tvMeta.textSize = 12f
         tvMeta.setTextColor(0xFF9CA3AF.toInt())
 
         middleCol.addView(tvDesc)
         middleCol.addView(tvMeta)
 
+        // AMOUNT
         val tvAmount = TextView(this)
         tvAmount.text = "R${exp.amount}"
         tvAmount.textSize = 14f
         tvAmount.setTextColor(0xFFFFFFFF.toInt())
         tvAmount.setTypeface(null, android.graphics.Typeface.BOLD)
+
         val amountParams = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.WRAP_CONTENT,
             LinearLayout.LayoutParams.WRAP_CONTENT
@@ -225,10 +234,29 @@ class SharedBudgetActivity : AppCompatActivity() {
         amountParams.marginEnd = dp8
         tvAmount.layoutParams = amountParams
 
+        // DELETE BUTTON
         val tvDelete = TextView(this)
         tvDelete.text = "🗑"
-        tvDelete.textSize = 16f
+        tvDelete.textSize = 18f
 
+        tvDelete.setOnClickListener {
+
+            lifecycleScope.launch {
+                db.sharedBudgetDao().deleteExpenseById(exp.id)
+
+                runOnUiThread {
+                    Toast.makeText(
+                        this@SharedBudgetActivity,
+                        "Expense deleted",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    loadBudgets() // refresh UI
+                }
+            }
+        }
+
+        // ADD VIEWS
         row.addView(icon)
         row.addView(middleCol)
         row.addView(tvAmount)

@@ -4,85 +4,185 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:background="#0F172A"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="20dp"
+    <!-- SCROLL CONTENT -->
+    <ScrollView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="match_parent"
+        android:layout_above="@id/bottomNav">
 
-        <!-- HEADER -->
-        <TextView
-            android:text="Analytics"
-            android:textColor="#FFFFFF"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:text="Visualize your spending patterns"
-            android:textColor="#9CA3AF"
-            android:textSize="13sp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <!-- PERIOD CARD -->
         <LinearLayout
             android:orientation="vertical"
-            android:background="#1E293B"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
+            android:padding="20dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <!-- HEADER -->
             <TextView
-                android:text="Period"
-                android:textColor="#9CA3AF"
-                android:textSize="12sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:text="This Month"
+                android:text="Analytics"
                 android:textColor="#FFFFFF"
-                android:textSize="14sp"
+                android:textSize="24sp"
                 android:textStyle="bold"
-                android:layout_marginBottom="12dp"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:background="#334155"
-                android:layout_marginBottom="12dp"/>
+            <TextView
+                android:text="Visualize your spending patterns"
+                android:textColor="#9CA3AF"
+                android:textSize="13sp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
 
+            <!-- PERIOD CARD -->
             <LinearLayout
-                android:orientation="horizontal"
-                android:gravity="center_vertical"
+                android:orientation="vertical"
+                android:background="#1E293B"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="Total spent in period:"
+                    android:text="Period"
                     android:textColor="#9CA3AF"
-                    android:textSize="14sp"
-                    android:layout_width="0dp"
-                    android:layout_weight="1"
+                    android:textSize="12sp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
                 <TextView
-                    android:id="@+id/tvTotalSpent"
-                    android:text="R0.00"
+                    android:text="This Month"
                     android:textColor="#FFFFFF"
-                    android:textSize="18sp"
+                    android:textSize="14sp"
                     android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="1dp"
+                    android:background="#334155"
+                    android:layout_marginBottom="12dp"/>
+
+                <LinearLayout
+                    android:orientation="horizontal"
+                    android:gravity="center_vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:text="Total spent in period:"
+                        android:textColor="#9CA3AF"
+                        android:textSize="14sp"
+                        android:layout_width="0dp"
+                        android:layout_weight="1"
+                        android:layout_height="wrap_content"/>
+
+                    <TextView
+                        android:id="@+id/tvTotalSpent"
+                        android:text="R0.00"
+                        android:textColor="#FFFFFF"
+                        android:textSize="18sp"
+                        android:textStyle="bold"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"/>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <!-- PIE CHART CARD -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="#1E293B"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Spending by Category"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pieChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="300dp"/>
+
+            </LinearLayout>
+
+            <!-- CATEGORY TOTALS CARD -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="#1E293B"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:text="Category Totals"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <LinearLayout
+                    android:id="@+id/categoryContainer"
+                    android:orientation="vertical"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"/>
+
+            </LinearLayout>
+
+            <!-- SUMMARY CARD -->
+            <LinearLayout
+                android:orientation="vertical"
+                android:background="#1E293B"
+                android:padding="12dp"
+                android:layout_marginBottom="16dp"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/tvTotalBudget"
+                    android:text="Total Budget: R0"
+                    android:textColor="#9CA3AF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tvRemaining"
+                    android:text="Remaining: R0"
+                    android:textColor="#22C55E"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tvBudgetCount"
+                    android:text="Budgets: 0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
+                    android:layout_marginBottom="8dp"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"/>
+
+                <TextView
+                    android:id="@+id/tvExpenseCount"
+                    android:text="Expenses: 0"
+                    android:textColor="#FFFFFF"
+                    android:textSize="14sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -90,115 +190,17 @@
 
         </LinearLayout>
 
-        <!-- PIE CHART CARD -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:background="#1E293B"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+    </ScrollView>
 
-            <TextView
-                android:text="Spending by Category"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <com.github.mikephil.charting.charts.PieChart
-                android:id="@+id/pieChart"
-                android:layout_width="match_parent"
-                android:layout_height="300dp"/>
-
-        </LinearLayout>
-
-        <!-- CATEGORY TOTALS CARD -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:background="#1E293B"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:text="Category Totals"
-                android:textColor="#FFFFFF"
-                android:textSize="16sp"
-                android:textStyle="bold"
-                android:layout_marginBottom="12dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <LinearLayout
-                android:id="@+id/categoryContainer"
-                android:orientation="vertical"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-        <!-- SUMMARY CARD -->
-        <LinearLayout
-            android:orientation="vertical"
-            android:background="#1E293B"
-            android:padding="12dp"
-            android:layout_marginBottom="16dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
-
-            <TextView
-                android:id="@+id/tvTotalBudget"
-                android:text="Total Budget: R0"
-                android:textColor="#9CA3AF"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tvRemaining"
-                android:text="Remaining: R0"
-                android:textColor="#22C55E"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tvBudgetCount"
-                android:text="Budgets: 0"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:layout_marginBottom="8dp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-            <TextView
-                android:id="@+id/tvExpenseCount"
-                android:text="Expenses: 0"
-                android:textColor="#FFFFFF"
-                android:textSize="14sp"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-        </LinearLayout>
-
-    </LinearLayout>
-
-</ScrollView>
-
-<com.google.android.material.bottomnavigation.BottomNavigationView
-android:id="@+id/bottomNav"
-android:layout_alignParentBottom="true"
-android:background="#1E293B"
-android:layout_width="match_parent"
-android:layout_height="70dp"
-app:itemIconTint="#9CA3AF"
-app:itemTextColor="#9CA3AF"
-app:menu="@menu/bottom_menu" />
+    <!-- BOTTOM NAV -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNav"
+        android:layout_alignParentBottom="true"
+        android:background="#1E293B"
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        app:itemIconTint="#9CA3AF"
+        app:itemTextColor="#9CA3AF"
+        app:menu="@menu/bottom_menu" />
 
 </RelativeLayout>
