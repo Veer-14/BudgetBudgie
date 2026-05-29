@@ -107,16 +107,35 @@
                 android:padding="16dp"
                 android:layout_marginBottom="12dp">
 
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Time Period"
                     android:textColor="#9CA3AF"
                     android:textSize="13sp"
-                    android:layout_marginBottom="8dp" />
+                    android:layout_marginBottom="6dp" />
 
                 <Spinner
                     android:id="@+id/spinnerTimePeriod"
+                    android:layout_width="match_parent"
+                    android:layout_height="48dp"
+                    android:background="@drawable/bg_input"
+                    android:paddingHorizontal="12dp"
+                    android:popupBackground="#1E293B"
+                    android:layout_marginBottom="12dp" />
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Filter by Account"
+                    android:textColor="#9CA3AF"
+                    android:textSize="13sp"
+                    android:layout_marginBottom="6dp" />
+
+                <Spinner
+                    android:id="@+id/spinnerAccount"
                     android:layout_width="match_parent"
                     android:layout_height="48dp"
                     android:background="@drawable/bg_input"
@@ -137,29 +156,17 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Balance History"
+                    android:text="Account Balances"
                     android:textColor="#FFFFFF"
                     android:textSize="15sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="16dp" />
+                    android:layout_marginBottom="12dp" />
 
 
-                <LinearLayout
-                    android:id="@+id/barGraphContainer"
+                <com.github.mikephil.charting.charts.BarChart
+                    android:id="@+id/barChart"
                     android:layout_width="match_parent"
-                    android:layout_height="150dp"
-                    android:orientation="horizontal"
-                    android:gravity="bottom"
-                    android:weightSum="6" />
-
-
-                <LinearLayout
-                    android:id="@+id/graphLabelsContainer"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="6"
-                    android:layout_marginTop="4dp" />
+                    android:layout_height="260dp" />
 
             </LinearLayout>
 
@@ -201,7 +208,6 @@
 
         </LinearLayout>
     </ScrollView>
-
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
