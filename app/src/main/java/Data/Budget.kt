@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "budget")
 data class Budget(
-    @PrimaryKey val id: Int = 1,
-    val minAmount: Double,
-    val maxAmount: Double
+    @PrimaryKey val id: Int = 0,
+    var minAmount: Double = 0.0,
+    var maxAmount: Double = 0.0
 )

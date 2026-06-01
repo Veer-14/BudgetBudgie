@@ -1,33 +1,35 @@
 package com.example.budgetbudgie
 
+import android.content.Intent
 import android.os.Bundle
-import android.widget.TextView
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.example.budgetbudgie.R
 import com.example.budgetbudgie.data.Expense
-import Data.database.AppDatabase
-import android.app.DatePickerDialog
-import android.content.Intent
-import android.icu.util.Calendar
-import android.widget.Button
-import android.widget.EditText
-import android.widget.Toast
 import com.google.android.material.bottomnavigation.BottomNavigationView
-import kotlinx.coroutines.launch
+import com.google.firebase.database.*
+import java.text.SimpleDateFormat
+import java.util.*
+import com.google.firebase.database.*
 
 class ExpensesActivity : AppCompatActivity() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ExpenseAdapter
-    private lateinit var db: AppDatabase
     private lateinit var tvTotal: TextView
     private lateinit var etStartDate: EditText
     private lateinit var etEndDate: EditText
     private lateinit var btnFilter: Button
     private lateinit var tvCategoryTotals: TextView
+
+    private val expenseRef =
+        FirebaseDatabase.getInstance().getReference("expenses")
+
+    private val dbRef =
+        FirebaseDatabase.getInstance().getReference("expenses")
+
+    private var allExpenses = mutableListOf<Expense>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,22 +50,13 @@ class ExpensesActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = adapter
 
-        db = AppDatabase.getDatabase(this)
-
         etStartDate = findViewById(R.id.etStartDate)
         etEndDate = findViewById(R.id.etEndDate)
         btnFilter = findViewById(R.id.btnFilter)
 
-        // Open DatePicker
-        etStartDate.setOnClickListener {
-            showDatePicker(etStartDate)
-        }
+        etStartDate.setOnClickListener { showDatePicker(etStartDate) }
+        etEndDate.setOnClickListener { showDatePicker(etEndDate) }
 
-        etEndDate.setOnClickListener {
-            showDatePicker(etEndDate)
-        }
-
-        // Apply filter
         btnFilter.setOnClickListener {
             val start = etStartDate.text.toString()
             val end = etEndDate.text.toString()
@@ -73,25 +66,70 @@ class ExpensesActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
-            filterExpenses(start, end)
+            applyFilter(start, end)
         }
 
         loadExpenses()
-        setupBottomNav()
     }
 
+    // ================= FIREBASE LOAD =================
     private fun loadExpenses() {
-        lifecycleScope.launch {
-            val expenses = db.expenseDao().getAllExpenses()
-            updateUI(expenses)
-        }
+
+        expenseRef.addValueEventListener(object : ValueEventListener {
+
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                val expenses = mutableListOf<Expense>()
+
+                for (child in snapshot.children) {
+                    val exp = child.getValue(Expense::class.java)
+                    if (exp != null) expenses.add(exp)
+                }
+
+                updateUI(expenses)
+            }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
+
+    // ================= FILTER (LOCAL) =================
+    private fun applyFilter(start: String, end: String) {
+
+        val filtered = allExpenses.filter {
+            it.date >= start && it.date <= end
+        }
+
+        updateUI(filtered)
+    }
+
+    // ================= UI UPDATE =================
+    private fun updateUI(expenses: List<Expense>) {
+
+        adapter.updateData(expenses)
+
+        tvTotal.text = "R%.2f".format(expenses.sumOf { it.amount })
+
+        val grouped = expenses.groupBy { it.category }
+            .mapValues { it.value.sumOf { e -> e.amount } }
+
+        val builder = StringBuilder()
+
+        grouped.forEach {
+            builder.append("${it.key}: R%.2f\n".format(it.value))
+        }
+
+        tvCategoryTotals.text = builder.toString()
+    }
+
+    // ================= BOTTOM NAV =================
     private fun setupBottomNav() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.selectedItemId = R.id.expenses
 
         bottomNav.setOnItemSelectedListener { item ->
             when (item.itemId) {
+
                 R.id.expenses -> true
 
                 R.id.balance -> {
@@ -123,20 +161,19 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
+    // ================= DATE PICKER =================
     private fun showDatePicker(target: EditText) {
 
         val calendar = Calendar.getInstance()
 
-        val datePickerDialog = DatePickerDialog(
+        val datePickerDialog = android.app.DatePickerDialog(
             this,
             { _, year, month, day ->
 
                 val formattedMonth = String.format("%02d", month + 1)
                 val formattedDay = String.format("%02d", day)
 
-                val selectedDate = "$year-$formattedMonth-$formattedDay"
-                target.setText(selectedDate)
-
+                target.setText("$year-$formattedMonth-$formattedDay")
             },
             calendar.get(Calendar.YEAR),
             calendar.get(Calendar.MONTH),
@@ -144,33 +181,5 @@ class ExpensesActivity : AppCompatActivity() {
         )
 
         datePickerDialog.show()
-    }
-
-    private fun filterExpenses(start: String, end: String) {
-        lifecycleScope.launch {
-
-            val expenses = db.expenseDao()
-                .getExpenseBetweenDates(start, end)
-
-            updateUI(expenses)
-
-            val categoryTotals = db.expenseDao()
-                .getCategoryTotals(start, end)
-
-            val builder = StringBuilder()
-
-            categoryTotals.forEach {
-                builder.append("${it.category}: R%.2f\n".format(it.total))
-            }
-
-            tvCategoryTotals.text = builder.toString()
-        }
-    }
-
-    private fun updateUI(expenses: List<Expense>) {
-        adapter.updateData(expenses)
-
-        val total = expenses.sumOf { it.amount }
-        tvTotal.text = "R%.2f".format(total)
     }
 }

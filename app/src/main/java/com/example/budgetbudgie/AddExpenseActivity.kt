@@ -15,11 +15,16 @@ import android.app.DatePickerDialog
 import android.icu.util.Calendar
 import kotlinx.coroutines.launch
 import java.io.File
+import android.util.Log
+import com.google.firebase.database.FirebaseDatabase
 
 class AddExpenseActivity : AppCompatActivity() {
 
     private lateinit var db: AppDatabase
     private var selectedImageUri: String? = null
+
+    private val dbRef =
+        FirebaseDatabase.getInstance().getReference("expenses")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -80,9 +85,22 @@ class AddExpenseActivity : AppCompatActivity() {
             )
 
             lifecycleScope.launch {
-                db.expenseDao().insertExpense(expense)
-                finish()
 
+                db.expenseDao().insertExpense(expense)
+
+                val id = dbRef.push().key!!
+
+                dbRef.child(id).setValue(expense)
+                    .addOnSuccessListener {
+
+                        Log.d("FIREBASE", "Expense saved successfully")
+
+                        finish()
+                    }
+                    .addOnFailureListener {
+
+                        Log.e("FIREBASE", "Failed: ${it.message}")
+                    }
             }
         }
         etDate.setOnClickListener {

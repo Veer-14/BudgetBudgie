@@ -17,7 +17,10 @@ import kotlinx.coroutines.launch
 import android.animation.ObjectAnimator
 import android.content.res.ColorStateList
 import android.view.animation.DecelerateInterpolator
+import com.example.budgetbudgie.data.Expense
 import kotlin.jvm.java
+import com.google.firebase.database.*
+import com.google.firebase.database.FirebaseDatabase
 
 class HomePage : AppCompatActivity() {
 
@@ -30,6 +33,12 @@ class HomePage : AppCompatActivity() {
     private lateinit var cardQuick: View
     private lateinit var cardRecent: View
     private lateinit var rewardsCard: View
+
+    private val expenseRef =
+        FirebaseDatabase.getInstance().getReference("expenses")
+
+    private val budgetRef =
+        FirebaseDatabase.getInstance().getReference("budget")
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -95,10 +104,10 @@ class HomePage : AppCompatActivity() {
                 val min = minInput.text.toString().toDoubleOrNull() ?: 0.0
                 val max = maxInput.text.toString().toDoubleOrNull() ?: 0.0
 
-                val db = AppDatabase.getDatabase(this)
+                val budget = Budget(1, min, max)
 
                 lifecycleScope.launch {
-                    db.budgetDao().insertBudget(Budget(1, min, max))
+                    budgetRef.child("1").setValue(budget)
                     loadDashboard()
                 }
             }
@@ -167,69 +176,78 @@ class HomePage : AppCompatActivity() {
         cardRecent.visibility = if (showRecent) View.VISIBLE else View.GONE
         rewardsCard.visibility = if (showRewards) View.VISIBLE else View.GONE
 
-        val db = AppDatabase.getDatabase(this)
+        expenseRef.addValueEventListener(object : ValueEventListener {
 
-        lifecycleScope.launch {
+            override fun onDataChange(snapshot: DataSnapshot) {
 
+                val expenses = mutableListOf<Expense>()
 
-            val greeting = findViewById<TextView>(R.id.txtGreeting)
-            greeting.text = "Hello, ${getUsername()}"
+                for (child in snapshot.children) {
+                    val exp = child.getValue(Expense::class.java)
+                    if (exp != null) expenses.add(exp)
+                }
 
-            val budget = db.budgetDao().getBudget()
-            val expenses = db.expenseDao().getAllExpenses()
+                budgetRef.child("1").addListenerForSingleValueEvent(object : ValueEventListener {
 
-            if (budget == null) return@launch
+                    override fun onDataChange(budgetSnap: DataSnapshot) {
 
-            val max = budget.maxAmount
-            val min = budget.minAmount
+                        val budget = budgetSnap.getValue(Budget::class.java)
+                        if (budget == null) return
 
-            val totalSpent = expenses.sumOf { it.amount }
-            val count = expenses.size
-            val remaining = max - totalSpent
+                        val max = budget.maxAmount
+                        val min = budget.minAmount
 
-            val percentUsed = if (max > 0) {
-                ((totalSpent / max) * 100).toInt()
-            } else 0
+                        val totalSpent = expenses.sumOf { it.amount }
+                        val count = expenses.size
+                        val remaining = max - totalSpent
 
-            var seeds = 0
-            seeds += count * 5
-            if (percentUsed < 80) seeds += 20
-            if (percentUsed < 50) seeds += 30
+                        val percentUsed = if (max > 0) {
+                            ((totalSpent / max) * 100).toInt()
+                        } else 0
 
-            val level = (seeds / 100) + 1
-            val progress = seeds % 100
+                        var seeds = 0
+                        seeds += count * 5
+                        if (percentUsed < 80) seeds += 20
+                        if (percentUsed < 50) seeds += 30
 
-            val gamePrefs = getSharedPreferences("game", MODE_PRIVATE)
-            gamePrefs.edit().putInt("seeds", seeds).apply()
+                        val level = (seeds / 100) + 1
+                        val progress = seeds % 100
 
-            seedsText.text = "Seeds: $seeds 🌱"
-            levelText.text = "Level $level"
-            progressSeeds.progress = progress
+                        val gamePrefs = getSharedPreferences("game", MODE_PRIVATE)
+                        gamePrefs.edit().putInt("seeds", seeds).apply()
 
-            val color = when {
-                percentUsed < 50 -> android.graphics.Color.parseColor("#22C55E")
-                percentUsed < 80 -> android.graphics.Color.parseColor("#F59E0B")
-                else -> android.graphics.Color.parseColor("#EF4444")
+                        val greeting = findViewById<TextView>(R.id.txtGreeting)
+                        greeting.text = "Hello, ${getUsername()}"
+
+                        findViewById<TextView>(R.id.txtMin).text = "R%.2f min".format(min)
+                        findViewById<TextView>(R.id.txtMax).text = "R%.2f max".format(max)
+                        findViewById<TextView>(R.id.txtRemaining).text = "R%.2f".format(remaining)
+                        findViewById<TextView>(R.id.txtPercentage).text = "$percentUsed% used"
+
+                        findViewById<TextView>(R.id.txtTotalSpent).text =
+                            "R%.2f".format(totalSpent)
+
+                        findViewById<TextView>(R.id.txtExpenseCount).text =
+                            count.toString()
+
+                        findViewById<TextView>(R.id.txtSeeds).text =
+                            "Seeds: $seeds 🌱"
+
+                        findViewById<TextView>(R.id.txtLevel).text =
+                            "Level $level"
+
+                        findViewById<android.widget.ProgressBar>(R.id.progressSeeds).progress =
+                            progress
+
+                        updateBudgie(percentUsed)
+                    }
+
+                    override fun onCancelled(error: DatabaseError) {}
+                })
             }
 
-            minText.text = "R%.2f min".format(min)
-            maxText.text = "R%.2f max".format(max)
-            remainingText.text = "R%.2f".format(remaining)
-            percentText.text = "$percentUsed% used"
-
-            progressBar.progressTintList = ColorStateList.valueOf(color)
-
-            ObjectAnimator.ofInt(progressBar, "progress", 0, percentUsed).apply {
-                duration = 900
-                interpolator = DecelerateInterpolator()
-                start()
-            }
-
-            totalSpentText.text = "R%.2f".format(totalSpent)
-            expenseCountText.text = count.toString()
-
-            updateBudgie(percentUsed)
-        }
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
 

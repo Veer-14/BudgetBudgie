@@ -1,6 +1,8 @@
 plugins {
     alias(libs.plugins.android.application)
+
     id("com.google.devtools.ksp") version "2.3.2"
+    alias(libs.plugins.google.gms.google.services)
 }
 
 android {
@@ -47,6 +49,9 @@ dependencies {
     implementation(libs.androidx.constraintlayout)
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
+    implementation(libs.firebase.database)
+
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
