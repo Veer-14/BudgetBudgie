@@ -1,76 +1,80 @@
 package com.example.budgetbudgie
-import android.widget.Toast
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
-import Data.database.AppDatabase
-import kotlinx.coroutines.launch
+import com.google.firebase.auth.FirebaseAuth
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var etUsername: EditText
+   //variables
+    private lateinit var etEmail: EditText
     private lateinit var etPassword: EditText
     private lateinit var btnLogin: Button
     private lateinit var tvGoToRegister: TextView
     private lateinit var tvError: TextView
-    private lateinit var db: AppDatabase
+
+
+    private lateinit var auth: FirebaseAuth
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        db = AppDatabase.getDatabase(this)
+        // Connect to Firebase Authentication
+        auth = FirebaseAuth.getInstance()
 
 
-        etUsername = findViewById(R.id.etUsername)
+        etEmail = findViewById(R.id.etEmail)
         etPassword = findViewById(R.id.etPassword)
         btnLogin = findViewById(R.id.btnLogin)
         tvGoToRegister = findViewById(R.id.tvGoToRegister)
         tvError = findViewById(R.id.tvError)
 
+
         btnLogin.setOnClickListener {
-            val username = etUsername.text.toString().trim()
+
+
+            val email = etEmail.text.toString().trim()
             val password = etPassword.text.toString().trim()
 
-            if (username.isEmpty() || password.isEmpty()) {
+
+            if (email.isEmpty() || password.isEmpty()) {
                 tvError.setText(R.string.error_fill_fields)
                 tvError.visibility = View.VISIBLE
                 return@setOnClickListener
             }
 
-            lifecycleScope.launch {
-                val user = db.UserDao().loginUser(username, password)
-                runOnUiThread {
-                    if (user != null) {
-                        tvError.visibility = View.GONE
-                        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
-                        prefs.edit().putString("username", user.username).apply()
 
-                        Toast.makeText(
-                            this@MainActivity,
-                            "Welcome, ${user.username}!",
-                            Toast.LENGTH_SHORT
-                        ).show()
+            auth.signInWithEmailAndPassword(email, password)
+                .addOnSuccessListener {
 
-                        val intent = Intent(this@MainActivity, HomePage::class.java)
-                       // intent.putExtra("username", user.username) // ✅ SEND IT HERE
-                        startActivity(intent)
+                    tvError.visibility = View.GONE
 
-                        finish()
+                    val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                    prefs.edit().putString("username", email).apply()
 
-                    } else {
-                        tvError.setText(R.string.error_invalid_login)
-                        tvError.visibility = View.VISIBLE
-                    }
+                    Toast.makeText(
+                        this@MainActivity,
+                        "Welcome, $email!",
+                        Toast.LENGTH_SHORT
+                    ).show()
+
+                    startActivity(Intent(this@MainActivity, HomePage::class.java))
+                    finish()
                 }
-            }
+                .addOnFailureListener {
+                   // if login fails
+                    tvError.setText(R.string.error_invalid_login)
+                    tvError.visibility = View.VISIBLE
+                }
         }
 
+       //directs user to register screen
         tvGoToRegister.setOnClickListener {
             startActivity(Intent(this, RegisterActivity::class.java))
         }

@@ -133,7 +133,7 @@ class HomePage : AppCompatActivity() {
                     val expense = child.getValue(Expense::class.java)
 
                     if (expense != null) {
-                        expense.firebaseId = child.key   // IMPORTANT
+                        expense.firebaseId = child.key
                         expenses.add(expense)
                     }
                 }

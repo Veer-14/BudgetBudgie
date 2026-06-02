@@ -52,21 +52,21 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/username"
+            android:text="Email"
             android:textColor="@color/text_secondary"
             android:textSize="13sp"
             android:layout_marginBottom="6dp" />
 
         <EditText
-            android:id="@+id/etRegUsername"
+            android:id="@+id/etRegEmail"
             android:layout_width="match_parent"
             android:layout_height="52dp"
             android:background="@drawable/bg_input"
-            android:hint="@string/username"
+            android:hint="Email"
             android:textColor="@color/text_primary"
             android:textColorHint="@color/text_secondary"
             android:paddingHorizontal="16dp"
-            android:inputType="text"
+            android:inputType="textEmailAddress"
             android:layout_marginBottom="16dp" />
 
         <TextView
