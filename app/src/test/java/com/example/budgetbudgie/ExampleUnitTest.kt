@@ -8,79 +8,80 @@ import org.junit.Assert.*
 
 class BudgetBudgieUnitTest {
 
-    // login validation
+    // Login validation tests
 
     @Test
     fun login_emptyUsername_fails() {
         val username = ""
-        val password = "password123"
+        val password = "password345"
         val isValid = username.isNotEmpty() && password.isNotEmpty()
-        assertFalse("Empty username should fail validation", isValid)
+        assertFalse("Empty username fail validation", isValid)
     }
 
     @Test
     fun login_emptyPassword_fails() {
-        val username = "narishka"
+        val username = "user@email.com"
         val password = ""
         val isValid = username.isNotEmpty() && password.isNotEmpty()
-        assertFalse("Empty password should fail validation", isValid)
+        assertFalse("Empty password  fail validation", isValid)
     }
 
     @Test
     fun login_bothFieldsFilled_passes() {
-        val username = "narishka"
-        val password = "abc123"
+        val username = "user@email.com"
+        val password = "abc345"
         val isValid = username.isNotEmpty() && password.isNotEmpty()
-        assertTrue("Both fields filled should pass validation", isValid)
+        assertTrue("Both fields filled  pass validation", isValid)
     }
 
-    // Register validation
+    // Register validation tests
 
     @Test
     fun register_passwordTooShort_fails() {
         val password = "abc"
         val isValid = password.length >= 6
-        assertFalse("Password shorter than 6 chars should fail", isValid)
+        assertFalse("Password shorter than 6 chars  fail", isValid)
     }
 
     @Test
     fun register_passwordExactlyMinLength_passes() {
-        val password = "abc123"
+        val password = "abc345"
         val isValid = password.length >= 6
-        assertTrue("Password of exactly 6  should pass", isValid)
+        assertTrue("Password of exactly 6 chars  pass", isValid)
     }
 
     @Test
     fun register_passwordLongerThanMin_passes() {
-        val password = "securepassword99"
+        val password = "password22"
         val isValid = password.length >= 6
-        assertTrue("Password longer than 6  should pass", isValid)
+        assertTrue("Password longer than 6 chars  pass", isValid)
     }
 
     // User data class tests
 
     @Test
     fun user_dataClass_createsCorrectly() {
-        val user = User(id = 1, username = "narishka", password = "abc123")
-        assertEquals("narishka", user.username)
-        assertEquals("abc123", user.password)
+        val user = User(id = 1, username = "testuser", password = "abc123")
+        assertEquals("testuser", user.username)
+        assertEquals("abc345", user.password)
         assertEquals(1, user.id)
     }
 
     @Test
     fun user_defaultId_isZero() {
-        val user = User(username = "testuser", password = "pass123")
+        val user = User(username = "testuser", password = "pass345")
         assertEquals(0, user.id)
     }
 
-    //  Account tests
+    // Account data class tests
 
     @Test
     fun account_dataClass_createsCorrectly() {
-        val account = Account(id = 1, name = "Savings", balance = 1500.0, userId = 1)
+
+        val account = Account(id = 1, name = "Savings", balance = 1500.0, userId = "user345")
         assertEquals("Savings", account.name)
         assertEquals(1500.0, account.balance, 0.01)
-        assertEquals(1, account.userId)
+        assertEquals("user345", account.userId)
     }
 
     @Test
@@ -88,7 +89,7 @@ class BudgetBudgieUnitTest {
         val name = ""
         val balance = "500.0"
         val isValid = name.isNotEmpty() && balance.isNotEmpty()
-        assertFalse("Empty account name should fail", isValid)
+        assertFalse("Empty account name  fail", isValid)
     }
 
     @Test
@@ -106,14 +107,14 @@ class BudgetBudgieUnitTest {
         assertEquals(2500.50, balance!!, 0.01)
     }
 
-    //  Total balance calculation tests
+    // Total balance calculation tests
 
     @Test
     fun totalBalance_multipleAccounts_sumsCorrectly() {
         val accounts = listOf(
-            Account(name = "Savings", balance = 1000.0, userId = 1),
-            Account(name = "Current", balance = 500.0, userId = 1),
-            Account(name = "Emergency", balance = 250.50, userId = 1)
+            Account(name = "Savings", balance = 1000.0, userId = "user345"),
+            Account(name = "Current", balance = 500.0, userId = "user345"),
+            Account(name = "Emergency", balance = 250.50, userId = "user345")
         )
         val total = accounts.sumOf { it.balance }
         assertEquals(1750.50, total, 0.01)
@@ -128,16 +129,15 @@ class BudgetBudgieUnitTest {
 
     @Test
     fun totalBalance_singleAccount_returnsSameValue() {
-        val accounts = listOf(Account(name = "Savings", balance = 999.99, userId = 1))
+        val accounts = listOf(Account(name = "Savings", balance = 999.99, userId = "user123"))
         val total = accounts.sumOf { it.balance }
         assertEquals(999.99, total, 0.01)
     }
 
-    // Expense tests
+    // Expense data class tests
 
     @Test
     fun expense_dataClass_createsCorrectly() {
-
         val expense = Expense(
             roomId = 1,
             firebaseId = "test123",
@@ -147,7 +147,6 @@ class BudgetBudgieUnitTest {
             description = "Lunch",
             imageUri = null
         )
-
         assertEquals("Food", expense.category)
         assertEquals(25.50, expense.amount, 0.01)
         assertEquals("2026-04-29", expense.date)
@@ -172,7 +171,7 @@ class BudgetBudgieUnitTest {
         assertEquals(0.0, total, 0.01)
     }
 
-    //  Forecast calculation tests
+    // Forecast calculation tests
 
     @Test
     fun forecast_withSpending_reducesBalance() {
