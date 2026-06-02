@@ -61,7 +61,7 @@ class BudgetBudgieUnitTest {
 
     @Test
     fun user_dataClass_createsCorrectly() {
-        val user = User(id = 1, username = "testuser", password = "abc123")
+        val user = User(id = 1, username = "testuser", password = "abc345")
         assertEquals("testuser", user.username)
         assertEquals("abc345", user.password)
         assertEquals(1, user.id)
@@ -129,7 +129,7 @@ class BudgetBudgieUnitTest {
 
     @Test
     fun totalBalance_singleAccount_returnsSameValue() {
-        val accounts = listOf(Account(name = "Savings", balance = 999.99, userId = "user123"))
+        val accounts = listOf(Account(name = "Savings", balance = 999.99, userId = "user345"))
         val total = accounts.sumOf { it.balance }
         assertEquals(999.99, total, 0.01)
     }
