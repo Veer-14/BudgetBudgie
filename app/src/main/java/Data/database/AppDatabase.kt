@@ -3,7 +3,6 @@ package Data.database
 
 import Data.dao.AccountDao
 import Data.dao.BudgetDao
-import Data.dao.ExpenseDao
 import Data.dao.UserDao
 import Data.dao.SharedBudgetDao
 import android.content.Context
@@ -35,7 +34,7 @@ import com.example.budgetbudgie.data.Budget
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun UserDao(): UserDao
-    abstract fun expenseDao(): ExpenseDao
+
     abstract fun accountDao(): AccountDao
     abstract fun sharedBudgetDao(): SharedBudgetDao
 

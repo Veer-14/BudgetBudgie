@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.budgetbudgie.R
 import com.example.budgetbudgie.data.Expense
 import java.io.File
+import com.google.firebase.database.FirebaseDatabase
 
 class ExpenseAdapter(
     private var expenses: List<Expense>
@@ -21,6 +22,7 @@ class ExpenseAdapter(
         val category: TextView = view.findViewById(R.id.tvCategory)
         val date: TextView = view.findViewById(R.id.tvDate)
         val image: ImageView = view.findViewById(R.id.imgExpense)
+        val deleteBtn: ImageView = view.findViewById(R.id.btnDelete)
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ExpenseViewHolder {
@@ -36,6 +38,18 @@ class ExpenseAdapter(
         holder.amount.text = "R%.2f".format(expense.amount)
         holder.category.text = "Category: ${expense.category}"
         holder.date.text = "Date: ${expense.date}"
+        holder.deleteBtn.setOnClickListener {
+
+            val expense = expenses[position]
+
+            val id = expense.firebaseId
+            if (id.isNullOrEmpty()) return@setOnClickListener
+
+            FirebaseDatabase.getInstance()
+                .getReference("expenses")
+                .child(id)
+                .removeValue()
+        }
 
         // 🔥 IMPORTANT: reset first (prevents wrong images)
         holder.image.setImageDrawable(null)
@@ -53,6 +67,7 @@ class ExpenseAdapter(
                 }
             }
         }
+
     }
 
     override fun getItemCount(): Int = expenses.size

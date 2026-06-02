@@ -12,6 +12,12 @@ import com.google.firebase.database.*
 import java.text.SimpleDateFormat
 import java.util.*
 import com.google.firebase.database.*
+import com.github.mikephil.charting.charts.LineChart
+import com.github.mikephil.charting.data.Entry
+import com.github.mikephil.charting.data.LineData
+import com.github.mikephil.charting.data.LineDataSet
+import com.github.mikephil.charting.components.XAxis
+import android.graphics.Color
 
 class ExpensesActivity : AppCompatActivity() {
 
@@ -22,6 +28,10 @@ class ExpensesActivity : AppCompatActivity() {
     private lateinit var etEndDate: EditText
     private lateinit var btnFilter: Button
     private lateinit var tvCategoryTotals: TextView
+    private lateinit var lineChartBudget: LineChart
+
+    private val budgetRef =
+        FirebaseDatabase.getInstance().getReference("budget")
 
     private val expenseRef =
         FirebaseDatabase.getInstance().getReference("expenses")
@@ -54,6 +64,10 @@ class ExpensesActivity : AppCompatActivity() {
         etEndDate = findViewById(R.id.etEndDate)
         btnFilter = findViewById(R.id.btnFilter)
 
+        lineChartBudget = findViewById(R.id.lineChartBudget)
+
+        setupBudgetChart()
+
         etStartDate.setOnClickListener { showDatePicker(etStartDate) }
         etEndDate.setOnClickListener { showDatePicker(etEndDate) }
 
@@ -83,10 +97,17 @@ class ExpensesActivity : AppCompatActivity() {
 
                 for (child in snapshot.children) {
                     val exp = child.getValue(Expense::class.java)
-                    if (exp != null) expenses.add(exp)
+                    if (exp != null) {
+                        exp.firebaseId = child.key ?: ""   // IMPORTANT
+                        expenses.add(exp)
+                    }
                 }
 
+                allExpenses.clear()
+                allExpenses.addAll(expenses)
+
                 updateUI(expenses)
+                loadBudgetGraph(expenses)
             }
 
             override fun onCancelled(error: DatabaseError) {}
@@ -101,6 +122,7 @@ class ExpensesActivity : AppCompatActivity() {
         }
 
         updateUI(filtered)
+        loadBudgetGraph(filtered)
     }
 
     // ================= UI UPDATE =================
@@ -182,4 +204,122 @@ class ExpensesActivity : AppCompatActivity() {
 
         datePickerDialog.show()
     }
+
+    private fun setupBudgetChart() {
+
+        lineChartBudget.apply {
+
+            description.isEnabled = false
+            setTouchEnabled(true)
+            setPinchZoom(false)
+
+            axisRight.isEnabled = false
+            axisLeft.axisMinimum = 0f
+            axisLeft.spaceTop = 10f
+
+            xAxis.apply {
+                position = XAxis.XAxisPosition.BOTTOM
+                textColor = Color.WHITE
+                setDrawGridLines(false)
+
+                granularity = 1f
+                isGranularityEnabled = true
+
+                valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return (value.toInt() + 1).toString() // Day 1,2,3...
+                    }
+                }
+            }
+
+            axisLeft.apply {
+                textColor = Color.WHITE
+                setDrawGridLines(true)
+
+                granularity = 1f
+                isGranularityEnabled = true
+
+                valueFormatter = object : com.github.mikephil.charting.formatter.ValueFormatter() {
+                    override fun getFormattedValue(value: Float): String {
+                        return "R${value.toInt()}"
+                    }
+                }
+            }
+
+            legend.textColor = Color.WHITE
+
+            setNoDataText("No expense data available")
+        }
+    }
+
+    private fun loadBudgetGraph(expenses: List<Expense>) {
+
+        budgetRef.child("1")
+            .addListenerForSingleValueEvent(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    val budget =
+                        snapshot.getValue(com.example.budgetbudgie.data.Budget::class.java)
+                            ?: return
+
+                    val minBudget = budget.minAmount.toFloat()
+                    val maxBudget = budget.maxAmount.toFloat()
+
+                    val spendingEntries = ArrayList<Entry>()
+                    val minEntries = ArrayList<Entry>()
+                    val maxEntries = ArrayList<Entry>()
+
+                    var runningTotal = 0f
+
+                    expenses.sortedBy { it.date }
+                        .forEachIndexed { index, expense ->
+
+                            runningTotal += expense.amount.toFloat()
+
+                            spendingEntries.add(
+                                Entry(index.toFloat(), runningTotal)
+                            )
+
+                            minEntries.add(
+                                Entry(index.toFloat(), minBudget)
+                            )
+
+                            maxEntries.add(
+                                Entry(index.toFloat(), maxBudget)
+                            )
+                        }
+
+                    val spendingSet =
+                        LineDataSet(spendingEntries, "Actual Spending").apply {
+                            color = Color.CYAN
+                            valueTextColor = Color.WHITE
+                            lineWidth = 3f
+                        }
+
+                    val minSet =
+                        LineDataSet(minEntries, "Minimum Budget").apply {
+                            color = Color.GREEN
+                            valueTextColor = Color.TRANSPARENT
+                            lineWidth = 2f
+                        }
+
+                    val maxSet =
+                        LineDataSet(maxEntries, "Maximum Budget").apply {
+                            color = Color.RED
+                            valueTextColor = Color.TRANSPARENT
+                            lineWidth = 2f
+                        }
+
+                    lineChartBudget.data =
+                        LineData(spendingSet, minSet, maxSet)
+
+                    lineChartBudget.animateX(1000)
+                    lineChartBudget.invalidate()
+                }
+
+                override fun onCancelled(error: DatabaseError) {}
+            })
+    }
+
 }

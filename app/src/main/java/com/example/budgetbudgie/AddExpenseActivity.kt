@@ -86,7 +86,7 @@ class AddExpenseActivity : AppCompatActivity() {
 
             lifecycleScope.launch {
 
-                db.expenseDao().insertExpense(expense)
+                
 
                 val id = dbRef.push().key!!
 

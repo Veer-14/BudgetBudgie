@@ -1,6 +1,6 @@
 package com.example.budgetbudgie
 
-import Data.database.AppDatabase
+
 import android.content.Intent
 import android.graphics.Color
 import android.os.Bundle
@@ -18,7 +18,7 @@ import kotlinx.coroutines.launch
 
 class AnalyticsActivity : AppCompatActivity() {
 
-    private lateinit var db: AppDatabase
+
     private lateinit var tvTotalBudget: TextView
     private lateinit var tvTotalSpent: TextView
     private lateinit var tvRemaining: TextView
@@ -27,11 +27,14 @@ class AnalyticsActivity : AppCompatActivity() {
     private lateinit var pieChart: PieChart
     private lateinit var categoryContainer: LinearLayout
 
+    private val expenseRef =
+        com.google.firebase.database.FirebaseDatabase.getInstance().getReference("expenses")
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_analytics)
 
-        db = AppDatabase.getDatabase(this)
+
 
         tvTotalBudget = findViewById(R.id.tvTotalBudget)
         tvTotalSpent = findViewById(R.id.tvTotalSpent)
@@ -47,72 +50,83 @@ class AnalyticsActivity : AppCompatActivity() {
     }
 
     private fun loadAnalytics() {
-        lifecycleScope.launch {
 
+        expenseRef.addValueEventListener(object :
+            com.google.firebase.database.ValueEventListener {
 
-            val totalSpent = db.expenseDao().getTotalExpenses() ?: 0.0
-            val expenseCount = db.expenseDao().getExpenseCount()
-            val categoryTotals = db.expenseDao().getAllCategoryTotals()
+            override fun onDataChange(snapshot: com.google.firebase.database.DataSnapshot) {
 
+                val expenses = mutableListOf<com.example.budgetbudgie.data.Expense>()
 
-            val totalBudget = db.sharedBudgetDao().getTotalBudget() ?: 0.0
-            val budgetCount = db.sharedBudgetDao().getBudgetCount()
+                for (child in snapshot.children) {
+                    val exp = child.getValue(com.example.budgetbudgie.data.Expense::class.java)
+                    if (exp != null) expenses.add(exp)
+                }
 
-            val remaining = totalBudget - totalSpent
+                val totalSpent = expenses.sumOf { it.amount }
+                val expenseCount = expenses.size
 
-            val pieEntries = ArrayList<PieEntry>()
+                val grouped = expenses.groupBy { it.category }
+                    .mapValues { it.value.sumOf { e -> e.amount } }
 
-            categoryTotals.forEach {
-                pieEntries.add(PieEntry(it.total.toFloat(), it.category))
-            }
+                val totalBudget = 0.0 // replace if you store budget in Firebase
+                val budgetCount = 0
 
-            runOnUiThread {
+                val remaining = totalBudget - totalSpent
 
-                // TEXT VALUES
-                tvTotalSpent.text = "R%.2f".format(totalSpent)
-                tvTotalBudget.text = "Total Budget: R%.2f".format(totalBudget)
-                tvRemaining.text = "Remaining: R%.2f".format(remaining)
-                tvBudgetCount.text = "Budgets: $budgetCount"
-                tvExpenseCount.text = "Expenses: $expenseCount"
+                val pieEntries = ArrayList<com.github.mikephil.charting.data.PieEntry>()
 
-                // PIE CHART
-                val dataSet = PieDataSet(pieEntries, "")
-                dataSet.colors = ColorTemplate.MATERIAL_COLORS.toList()
-                dataSet.valueTextColor = Color.WHITE
-                dataSet.valueTextSize = 12f
-
-                val data = PieData(dataSet)
-
-                pieChart.data = data
-                pieChart.description.isEnabled = false
-                pieChart.centerText = "Spending"
-                pieChart.setCenterTextColor(Color.WHITE)
-                pieChart.setHoleColor(Color.parseColor("#1E293B"))
-                pieChart.legend.textColor = Color.WHITE
-                pieChart.animateY(1000)
-                pieChart.invalidate()
-
-                // CATEGORY LIST
-                categoryContainer.removeAllViews()
-
-                val colors = ColorTemplate.MATERIAL_COLORS
-
-                categoryTotals.forEachIndexed { index, item ->
-
-                    val percent =
-                        if (totalSpent > 0) ((item.total / totalSpent) * 100).toInt() else 0
-
-                    val row = createCategoryRow(
-                        item.category,
-                        item.total,
-                        percent,
-                        colors[index % colors.size]
+                grouped.forEach {
+                    pieEntries.add(
+                        com.github.mikephil.charting.data.PieEntry(
+                            it.value.toFloat(),
+                            it.key
+                        )
                     )
+                }
 
-                    categoryContainer.addView(row)
+                runOnUiThread {
+
+                    tvTotalSpent.text = "R%.2f".format(totalSpent)
+                    tvTotalBudget.text = "Total Budget: R%.2f".format(totalBudget)
+                    tvRemaining.text = "Remaining: R%.2f".format(remaining)
+                    tvExpenseCount.text = "Expenses: $expenseCount"
+                    tvBudgetCount.text = "Budgets: $budgetCount"
+
+                    val dataSet = PieDataSet(pieEntries, "")
+                    dataSet.colors = com.github.mikephil.charting.utils.ColorTemplate.MATERIAL_COLORS.toList()
+                    dataSet.valueTextColor = Color.WHITE
+                    dataSet.valueTextSize = 12f
+
+                    pieChart.data = PieData(dataSet)
+                    pieChart.description.isEnabled = false
+                    pieChart.centerText = "Spending"
+                    pieChart.setHoleColor(Color.parseColor("#1E293B"))
+                    pieChart.legend.textColor = Color.WHITE
+                    pieChart.animateY(1000)
+                    pieChart.invalidate()
+
+                    categoryContainer.removeAllViews()
+
+                    grouped.forEach { (category, total) ->
+
+                        val percent =
+                            if (totalSpent > 0) ((total / totalSpent) * 100).toInt() else 0
+
+                        categoryContainer.addView(
+                            createCategoryRow(
+                                category,
+                                total,
+                                percent,
+                                Color.WHITE
+                            )
+                        )
+                    }
                 }
             }
-        }
+
+            override fun onCancelled(error: com.google.firebase.database.DatabaseError) {}
+        })
     }
 
     private fun createCategoryRow(

@@ -117,31 +117,54 @@ class HomePage : AppCompatActivity() {
 
     // ---------------- RECENT EXPENSES ----------------
     private fun loadRecentExpenses() {
+
         val container = findViewById<LinearLayout>(R.id.recentContainer)
-        val db = AppDatabase.getDatabase(this)
 
-        lifecycleScope.launch {
-            val expenses = db.expenseDao().getAllExpenses()
+        val dbRef = FirebaseDatabase.getInstance().getReference("expenses")
 
-            container.removeAllViews()
+        dbRef.addValueEventListener(object : ValueEventListener {
 
-            for (expense in expenses.reversed().take(5)) {
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-                val item = layoutInflater.inflate(R.layout.item_expense, container, false)
+                val expenses = mutableListOf<Expense>()
 
-                val tvDescription = item.findViewById<TextView>(R.id.tvDescription)
-                val tvCategory = item.findViewById<TextView>(R.id.tvCategory)
-                val tvDate = item.findViewById<TextView>(R.id.tvDate)
-                val tvAmount = item.findViewById<TextView>(R.id.tvAmount)
+                for (child in snapshot.children) {
 
-                tvDescription.text = expense.description
-                tvCategory.text = expense.category
-                tvDate.text = expense.date
-                tvAmount.text = "R${expense.amount}"
+                    val expense = child.getValue(Expense::class.java)
 
-                container.addView(item)
+                    if (expense != null) {
+                        expense.firebaseId = child.key   // IMPORTANT
+                        expenses.add(expense)
+                    }
+                }
+
+                container.removeAllViews()
+
+                // latest 5 expenses
+                for (expense in expenses.reversed().take(5)) {
+
+                    val item = layoutInflater.inflate(
+                        R.layout.item_expense,
+                        container,
+                        false
+                    )
+
+                    val tvDescription = item.findViewById<TextView>(R.id.tvDescription)
+                    val tvCategory = item.findViewById<TextView>(R.id.tvCategory)
+                    val tvDate = item.findViewById<TextView>(R.id.tvDate)
+                    val tvAmount = item.findViewById<TextView>(R.id.tvAmount)
+
+                    tvDescription.text = expense.description
+                    tvCategory.text = expense.category
+                    tvDate.text = expense.date
+                    tvAmount.text = "R%.2f".format(expense.amount)
+
+                    container.addView(item)
+                }
             }
-        }
+
+            override fun onCancelled(error: DatabaseError) {}
+        })
     }
 
     // ---------------- DASHBOARD ----------------

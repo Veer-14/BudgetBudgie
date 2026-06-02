@@ -7,11 +7,13 @@ import androidx.room.PrimaryKey
 data class Expense(
 
     @PrimaryKey(autoGenerate = true)
-    val id: Int = 0,
+    val roomId: Int = 0,   // Room ONLY
+
+    var firebaseId: String? = null,  // Firebase ONLY
+
     val category: String = "",
     val amount: Double = 0.0,
     val date: String = "",
     val description: String = "",
     val imageUri: String? = null
-
 )
