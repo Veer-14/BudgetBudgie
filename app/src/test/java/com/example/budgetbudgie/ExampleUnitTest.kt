@@ -137,13 +137,17 @@ class BudgetBudgieUnitTest {
 
     @Test
     fun expense_dataClass_createsCorrectly() {
+
         val expense = Expense(
-            id = 1,
+            roomId = 1,
+            firebaseId = "test123",
             category = "Food",
             amount = 25.50,
             date = "2026-04-29",
-            description = "Lunch"
+            description = "Lunch",
+            imageUri = null
         )
+
         assertEquals("Food", expense.category)
         assertEquals(25.50, expense.amount, 0.01)
         assertEquals("2026-04-29", expense.date)
@@ -153,9 +157,9 @@ class BudgetBudgieUnitTest {
     @Test
     fun expense_totalSpent_calculatesCorrectly() {
         val expenses = listOf(
-            Expense(category = "Food", amount = 25.50, date = "2026-04-01", description = "Lunch"),
-            Expense(category = "Transport", amount = 45.00, date = "2026-04-02", description = "Uber"),
-            Expense(category = "Shopping", amount = 200.00, date = "2026-04-03", description = "Shoes")
+            Expense(roomId = 1, category = "Food", amount = 25.50, date = "2026-04-01", description = "Lunch"),
+            Expense(roomId = 2, category = "Transport", amount = 45.00, date = "2026-04-02", description = "Uber"),
+            Expense(roomId = 3, category = "Shopping", amount = 200.00, date = "2026-04-03", description = "Shoes")
         )
         val total = expenses.sumOf { it.amount }
         assertEquals(270.50, total, 0.01)
