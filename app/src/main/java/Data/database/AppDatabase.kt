@@ -1,43 +1,31 @@
 package Data.database
 
-
 import Data.dao.AccountDao
 import Data.dao.BudgetDao
 import Data.dao.UserDao
-import Data.dao.SharedBudgetDao
 import android.content.Context
 import com.example.budgetbudgie.data.Account
 import com.example.budgetbudgie.data.Expense
 import com.example.budgetbudgie.data.User
-import com.example.budgetbudgie.data.SharedBudget
-import com.example.budgetbudgie.data.SharedExpense
 import androidx.room.Room
 import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.example.budgetbudgie.data.Budget
-
-
-
 
 @Database(
     entities = [
         User::class,
         Expense::class,
         Account::class,
-        SharedBudget::class,
-        SharedExpense::class,
         Budget::class
     ],
-    version = 5,
+    version = 6,
     exportSchema = false
 )
 abstract class AppDatabase : RoomDatabase() {
 
     abstract fun UserDao(): UserDao
-
     abstract fun accountDao(): AccountDao
-    abstract fun sharedBudgetDao(): SharedBudgetDao
-
     abstract fun budgetDao(): BudgetDao
 
     companion object {

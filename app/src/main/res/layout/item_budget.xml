@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <!-- BUDGET NAME ROW -->
+    <!-- Budget Name -->
     <LinearLayout
         android:orientation="horizontal"
         android:gravity="center_vertical"
@@ -30,7 +30,7 @@
 
     </LinearLayout>
 
-    <!-- SUBTITLE -->
+    <!-- Subtitle -->
     <TextView
         android:id="@+id/tvBudgetAmount"
         android:textColor="#9CA3AF"
@@ -40,7 +40,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- SPENT / REMAINING ROW -->
+    <!-- Spent / Remaining -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
@@ -96,7 +96,7 @@
 
     </LinearLayout>
 
-    <!-- PROGRESS BAR -->
+    <!-- Progress Bar -->
     <ProgressBar
         android:id="@+id/progressBudget"
         style="@style/Widget.AppCompat.ProgressBar.Horizontal"
@@ -109,7 +109,7 @@
         android:max="100"
         android:progress="0"/>
 
-    <!-- MEMBER COUNT -->
+    <!-- Member Count -->
     <TextView
         android:id="@+id/tvMemberCount"
         android:text="1 member"
@@ -120,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- DIVIDER -->
+    <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
@@ -128,7 +128,7 @@
         android:layout_marginTop="12dp"
         android:layout_marginBottom="12dp"/>
 
-    <!-- DETAILS HEADER -->
+    <!-- Details Header -->
     <TextView
         android:id="@+id/tvDetailsHeader"
         android:textColor="#FFFFFF"
@@ -138,7 +138,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- TOTAL BUDGET BOX -->
+    <!-- Total Budget -->
     <LinearLayout
         android:orientation="vertical"
         android:background="#1E293B"
@@ -164,7 +164,7 @@
 
     </LinearLayout>
 
-    <!-- TOTAL SPENT BOX -->
+    <!-- Total Spent -->
     <LinearLayout
         android:orientation="vertical"
         android:background="#1E293B"
@@ -190,7 +190,7 @@
 
     </LinearLayout>
 
-    <!-- REMAINING BOX -->
+    <!-- Remaining -->
     <LinearLayout
         android:orientation="vertical"
         android:background="#1E293B"
@@ -216,14 +216,14 @@
 
     </LinearLayout>
 
-    <!-- DIVIDER -->
+    <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#334155"
         android:layout_marginBottom="12dp"/>
 
-    <!-- MEMBERS HEADER -->
+    <!-- Members Header -->
     <TextView
         android:text="Members"
         android:textColor="#FFFFFF"
@@ -233,7 +233,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- MEMBERS LIST -->
+    <!-- Members List -->
     <LinearLayout
         android:id="@+id/membersContainer"
         android:orientation="vertical"
@@ -243,7 +243,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
 
-    <!-- ADD MEMBER BUTTON -->
+    <!-- Add Member Button -->
     <Button
         android:id="@+id/btnAddMember"
         android:text="👤 Add Member"
@@ -253,14 +253,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- DIVIDER -->
+    <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#334155"
         android:layout_marginBottom="12dp"/>
 
-    <!-- ADD EXPENSE BUTTON -->
+    <!-- Add Expense Button -->
     <Button
         android:id="@+id/btnAddExpense"
         android:text="+ Add Expense"
@@ -270,14 +270,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- DIVIDER -->
+    <!-- Divider -->
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:background="#334155"
         android:layout_marginBottom="12dp"/>
 
-    <!-- EXPENSES HEADER -->
+    <!-- Expenses Header -->
     <TextView
         android:text="Expenses"
         android:textColor="#FFFFFF"
@@ -287,7 +287,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
 
-    <!-- EXPENSES LIST -->
+    <!-- Expenses List -->
     <LinearLayout
         android:id="@+id/expenseContainer"
         android:orientation="vertical"
