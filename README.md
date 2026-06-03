@@ -29,7 +29,7 @@ The user can choose what appears on their home screen thanks to this functionali
 
 Shared budgets:
 
-This feature lets a user create a named budget with a set total amount for example "Ryan's Birthday" with a budget of R1500. Once created it appears as a card on the Shared Budgets page showing how much has been spent and how much still remains. A member can be added to a budget . Any member can tap "Add Expense" on the budget card and enter a description and amount this  updates the spent and remaining totals . Individual expenses can also be deleted which subtracts them back from the total. this allows for a group of people such as roommates splitting rent costs or friends planning a trip together can all add their contributions to one shared budget and everyone can see the  total.
+This feature lets a user create a named budget with a set total amount for example "Ryan's Birthday" with a budget of R1500. Once created it appears as a card on the Shared Budgets page showing how much has been spent and how much still remains. A member can be added to a budget .the user can  "Add Expense" on the budget card and enter a description and amount this updates the spent and remaining totals . Individual expenses can also be deleted which subtracts them back from the total. this allows for a group of people such as roommates splitting rent costs or friends planning a trip together can all add their contributions to one shared budget and everyone can see the total.
 
 
 Design considerations :
