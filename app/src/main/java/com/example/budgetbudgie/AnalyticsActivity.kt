@@ -17,6 +17,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.database.*
 import com.example.budgetbudgie.data.Expense
 import java.util.Calendar
+import com.google.firebase.auth.FirebaseAuth
 
 class AnalyticsActivity : AppCompatActivity() {
 
@@ -32,6 +33,8 @@ class AnalyticsActivity : AppCompatActivity() {
     private lateinit var etStartDate: EditText
     private lateinit var etEndDate: EditText
     private lateinit var btnFilter: Button
+
+    private val auth = FirebaseAuth.getInstance()
 
     private var allExpenses = mutableListOf<Expense>()
 
@@ -84,29 +87,37 @@ class AnalyticsActivity : AppCompatActivity() {
 
     private fun loadAnalytics() {
 
-        expenseRef.addValueEventListener(object : ValueEventListener {
+        val currentUserId = FirebaseAuth
+            .getInstance()
+            .currentUser?.uid ?: ""
 
-            override fun onDataChange(snapshot: DataSnapshot) {
+        expenseRef
+            .orderByChild("userId")
+            .equalTo(currentUserId)
+            .addValueEventListener(object : ValueEventListener {
 
-                val expenses = mutableListOf<Expense>()
+                override fun onDataChange(snapshot: DataSnapshot) {
 
-                for (child in snapshot.children) {
+                    val expenses = mutableListOf<Expense>()
 
-                    val exp = child.getValue(Expense::class.java)
+                    for (child in snapshot.children) {
 
-                    if (exp != null) {
-                        expenses.add(exp)
+                        val exp = child.getValue(Expense::class.java)
+
+                        if (exp != null) {
+                            exp.firebaseId = child.key ?: ""
+                            expenses.add(exp)
+                        }
                     }
+
+                    allExpenses.clear()
+                    allExpenses.addAll(expenses)
+
+                    updateAnalytics(expenses)
                 }
 
-                allExpenses.clear()
-                allExpenses.addAll(expenses)
-
-                updateAnalytics(expenses)
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+                override fun onCancelled(error: DatabaseError) {}
+            })
     }
 
     private fun updateAnalytics(expenses: List<Expense>) {

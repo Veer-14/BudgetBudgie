@@ -10,6 +10,7 @@ import com.example.budgetbudgie.data.SharedBudget
 import com.example.budgetbudgie.data.SharedExpense
 import com.example.budgetbudgie.data.SharedMember
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.*
 import com.google.firebase.database.Query
 
@@ -25,8 +26,11 @@ class SharedBudgetActivity : AppCompatActivity() {
     private lateinit var btnAddBudget: Button
 
     // listeners per budget
-    private val budgetListeners =
-        mutableMapOf<String, Pair<ValueEventListener, ValueEventListener>>()
+    private val expenseListeners =
+        mutableMapOf<String, ValueEventListener>()
+
+    private val memberListeners =
+        mutableMapOf<String, ValueEventListener>()
 
     private val expenseQueryRefs = mutableMapOf<String, Query>()
 
@@ -45,21 +49,35 @@ class SharedBudgetActivity : AppCompatActivity() {
 
     // Load budgets
     private fun loadBudgets() {
-        budgetsRef.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                detachAllChildListeners()
-                container.removeAllViews()
 
-                for (child in snapshot.children) {
-                    val budget = child.getValue(SharedBudget::class.java) ?: continue
-                    inflateAndBindBudgetCard(budget)
+        val currentUserId = FirebaseAuth
+            .getInstance()
+            .currentUser?.uid ?: ""
+
+        budgetsRef
+            .orderByChild("userId")
+            .equalTo(currentUserId)
+            .addValueEventListener(object : ValueEventListener {
+
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    detachAllChildListeners()
+                    container.removeAllViews()
+
+                    for (child in snapshot.children) {
+
+                        val budget =
+                            child.getValue(SharedBudget::class.java)
+                                ?: continue
+
+                        inflateAndBindBudgetCard(budget)
+                    }
                 }
-            }
 
-            override fun onCancelled(error: DatabaseError) {
-                toast("Failed to load budgets: ${error.message}")
-            }
-        })
+                override fun onCancelled(error: DatabaseError) {
+                    toast("Failed: ${error.message}")
+                }
+            })
     }
 
     // Create budget card and bind data
@@ -119,8 +137,18 @@ class SharedBudgetActivity : AppCompatActivity() {
 
         val expenseListener = object : ValueEventListener {
             override fun onDataChange(snap: DataSnapshot) {
-                expenseContainer.removeAllViews()
+
                 var totalSpent = 0.0
+
+                expenseContainer.removeAllViews()
+
+                if (!snap.exists()) {
+                    // 🔥 IMPORTANT: show zero values when no expenses
+                    tvSpent.text = "R0.00"
+                    tvRemaining.text = "R%.2f".format(budget.totalBudget)
+                    progressBudget.progress = 0
+                    return
+                }
 
                 for (e in snap.children) {
                     val exp = e.getValue(SharedExpense::class.java) ?: continue
@@ -147,7 +175,9 @@ class SharedBudgetActivity : AppCompatActivity() {
 
         expenseQuery.addValueEventListener(expenseListener)
 
-        budgetListeners[budget.id] = Pair(expenseListener, memberListener)
+        expenseQueryRefs[budget.id] = expenseQuery
+        expenseListeners[budget.id] = expenseListener
+        memberListeners[budget.id] = memberListener
         expenseQueryRefs[budget.id] = expenseQuery
 
         btnAddMember.setOnClickListener { showAddMemberDialog(budget.id) }
@@ -158,11 +188,17 @@ class SharedBudgetActivity : AppCompatActivity() {
 
     // Remove listeners before reload
     private fun detachAllChildListeners() {
-        for ((id, listeners) in budgetListeners) {
-            expenseQueryRefs[id]?.removeEventListener(listeners.first)
-            membersRef.child(id).removeEventListener(listeners.second)
+
+        for ((id, listener) in expenseListeners) {
+            expenseQueryRefs[id]?.removeEventListener(listener)
         }
-        budgetListeners.clear()
+
+        for ((id, listener) in memberListeners) {
+            membersRef.child(id).removeEventListener(listener)
+        }
+
+        expenseListeners.clear()
+        memberListeners.clear()
         expenseQueryRefs.clear()
     }
 
@@ -272,28 +308,51 @@ class SharedBudgetActivity : AppCompatActivity() {
 
     // Add budget
     private fun showAddBudgetDialog() {
-        val view = LayoutInflater.from(this).inflate(R.layout.dialog_add_budget, null)
 
-        val name = view.findViewById<EditText>(R.id.tvBudgetName)
-        val amt = view.findViewById<EditText>(R.id.tvBudgetAmount)
+        val view = LayoutInflater.from(this)
+            .inflate(R.layout.dialog_add_budget, null)
 
-        val dialog = AlertDialog.Builder(this).setView(view).create()
+        val etName = view.findViewById<EditText>(R.id.tvBudgetName)
+        val etAmount = view.findViewById<EditText>(R.id.tvBudgetAmount)
+
+        val dialog = AlertDialog.Builder(this)
+            .setView(view)
+            .create()
 
         view.findViewById<Button>(R.id.btnSaveBudget).setOnClickListener {
-            val n = name.text.toString().trim()
-            val a = amt.text.toString().toDoubleOrNull()
 
-            if (n.isEmpty() || a == null) {
-                toast("Invalid input")
+            val name = etName.text.toString().trim()
+            val amount = etAmount.text.toString().toDoubleOrNull()
+
+            val currentUserId = FirebaseAuth.getInstance().currentUser?.uid
+
+            if (name.isEmpty() || amount == null) {
+                toast("Enter valid details")
+                return@setOnClickListener
+            }
+
+            if (currentUserId.isNullOrEmpty()) {
+                toast("User not logged in")
                 return@setOnClickListener
             }
 
             val id = budgetsRef.push().key ?: return@setOnClickListener
-            val budget = SharedBudget(id, n, a)
+
+            val budget = SharedBudget(
+                id = id,
+                name = name,
+                totalBudget = amount,
+                userId = currentUserId
+            )
 
             budgetsRef.child(id).setValue(budget)
-                .addOnSuccessListener { dialog.dismiss() }
-                .addOnFailureListener { toast("Failed") }
+                .addOnSuccessListener {
+                    toast("Budget added")
+                    dialog.dismiss()
+                }
+                .addOnFailureListener {
+                    toast("Failed to add budget")
+                }
         }
 
         dialog.show()

@@ -53,11 +53,12 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:focusable="false"
                     android:clickable="true"
+                    android:focusable="false"
                     android:hint="Start Date (YYYY-MM-DD)"
+                    android:minHeight="48dp"
                     android:textColor="#FFFFFF"
-                    android:textColorHint="#9CA3AF"/>
+                    android:textColorHint="#9CA3AF" />
 
                 <EditText
                     android:id="@+id/etEndDate"

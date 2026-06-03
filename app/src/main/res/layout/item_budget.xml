@@ -139,89 +139,10 @@
         android:layout_height="wrap_content"/>
 
     <!-- Total Budget -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="#1E293B"
-        android:padding="12dp"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
 
-        <TextView
-            android:text="Total Budget"
-            android:textColor="#9CA3AF"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
-        <TextView
-            android:id="@+id/tvTotalBudgetDetail"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
 
-    </LinearLayout>
 
-    <!-- Total Spent -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="#1E293B"
-        android:padding="12dp"
-        android:layout_marginBottom="8dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="Total Spent"
-            android:textColor="#9CA3AF"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvTotalSpentDetail"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <!-- Remaining -->
-    <LinearLayout
-        android:orientation="vertical"
-        android:background="#1E293B"
-        android:padding="12dp"
-        android:layout_marginBottom="16dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <TextView
-            android:text="Remaining"
-            android:textColor="#9CA3AF"
-            android:textSize="12sp"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-        <TextView
-            android:id="@+id/tvRemainingDetail"
-            android:textColor="#FFFFFF"
-            android:textSize="22sp"
-            android:textStyle="bold"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
-
-    </LinearLayout>
-
-    <!-- Divider -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="#334155"
-        android:layout_marginBottom="12dp"/>
 
     <!-- Members Header -->
     <TextView
