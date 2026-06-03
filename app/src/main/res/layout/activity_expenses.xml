@@ -203,13 +203,13 @@
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/recyclerExpenses"
                         android:layout_width="match_parent"
-                        android:layout_height="500dp"
+                        android:layout_height="wrap_content"
                         android:nestedScrollingEnabled="false" />
                 </LinearLayout>
 
             </androidx.cardview.widget.CardView>
 
-            <!-- EXTRA SPACE FOR FAB -->
+
             <View
                 android:layout_width="match_parent"
                 android:layout_height="100dp" />
@@ -218,7 +218,7 @@
 
     </ScrollView>
 
-    <!-- FLOATING ACTION BUTTON -->
+
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabAdd"
         android:layout_width="wrap_content"

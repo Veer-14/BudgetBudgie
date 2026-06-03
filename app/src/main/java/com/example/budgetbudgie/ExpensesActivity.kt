@@ -39,6 +39,8 @@ class ExpensesActivity : AppCompatActivity() {
     private val dbRef =
         FirebaseDatabase.getInstance().getReference("expenses")
 
+
+
     private var allExpenses = mutableListOf<Expense>()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -86,35 +88,33 @@ class ExpensesActivity : AppCompatActivity() {
         loadExpenses()
     }
 
-    // ================= FIREBASE LOAD =================
+  //firebase load
     private fun loadExpenses() {
+        val currentUserId = com.google.firebase.auth.FirebaseAuth
+            .getInstance().currentUser?.uid ?: ""
 
-        expenseRef.addValueEventListener(object : ValueEventListener {
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                val expenses = mutableListOf<Expense>()
-
-                for (child in snapshot.children) {
-                    val exp = child.getValue(Expense::class.java)
-                    if (exp != null) {
-                        exp.firebaseId = child.key ?: ""   // IMPORTANT
-                        expenses.add(exp)
+        // Filter by userId so only the logged-in user's expenses are shown
+        expenseRef.orderByChild("userId").equalTo(currentUserId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val expenses = mutableListOf<Expense>()
+                    for (child in snapshot.children) {
+                        val exp = child.getValue(Expense::class.java)
+                        if (exp != null) {
+                            exp.firebaseId = child.key ?: ""
+                            expenses.add(exp)
+                        }
                     }
+                    allExpenses.clear()
+                    allExpenses.addAll(expenses)
+                    updateUI(expenses)
+                    loadBudgetGraph(expenses)
                 }
-
-                allExpenses.clear()
-                allExpenses.addAll(expenses)
-
-                updateUI(expenses)
-                loadBudgetGraph(expenses)
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+                override fun onCancelled(error: DatabaseError) {}
+            })
     }
 
-    // ================= FILTER (LOCAL) =================
+    //filter
     private fun applyFilter(start: String, end: String) {
 
         val filtered = allExpenses.filter {
@@ -125,7 +125,7 @@ class ExpensesActivity : AppCompatActivity() {
         loadBudgetGraph(filtered)
     }
 
-    // ================= UI UPDATE =================
+
     private fun updateUI(expenses: List<Expense>) {
 
         adapter.updateData(expenses)
@@ -144,7 +144,7 @@ class ExpensesActivity : AppCompatActivity() {
         tvCategoryTotals.text = builder.toString()
     }
 
-    // ================= BOTTOM NAV =================
+   //nav
     private fun setupBottomNav() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.selectedItemId = R.id.expenses
@@ -183,7 +183,7 @@ class ExpensesActivity : AppCompatActivity() {
         }
     }
 
-    // ================= DATE PICKER =================
+   //date picker
     private fun showDatePicker(target: EditText) {
 
         val calendar = Calendar.getInstance()

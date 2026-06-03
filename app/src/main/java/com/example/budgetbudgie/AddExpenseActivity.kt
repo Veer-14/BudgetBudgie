@@ -76,17 +76,23 @@ class AddExpenseActivity : AppCompatActivity() {
                 return@setOnClickListener
             }
 
+            // Get the current user's ID and save it with the expense
+            val currentUserId = com.google.firebase.auth.FirebaseAuth
+                .getInstance().currentUser?.uid ?: ""
+
             val expense = Expense(
                 category = category,
                 amount = amount,
                 date = date,
                 description = description,
-                imageUri = selectedImageUri
+                imageUri = selectedImageUri,
+                userId = currentUserId
+
             )
 
             lifecycleScope.launch {
 
-                
+
 
                 val id = dbRef.push().key!!
 
