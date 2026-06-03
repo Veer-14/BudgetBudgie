@@ -254,7 +254,10 @@ class ExpensesActivity : AppCompatActivity() {
 
     private fun loadBudgetGraph(expenses: List<Expense>) {
 
-        budgetRef.child("1")
+        val currentUserId = com.google.firebase.auth.FirebaseAuth
+            .getInstance().currentUser?.uid ?: ""
+
+        budgetRef.child(currentUserId)
             .addListenerForSingleValueEvent(object : ValueEventListener {
 
                 override fun onDataChange(snapshot: DataSnapshot) {

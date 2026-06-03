@@ -47,6 +47,13 @@ class MainActivity : AppCompatActivity() {
                     tvError.visibility = View.GONE
 
 
+
+                    auth.currentUser?.reload()?.addOnCompleteListener {
+                        val displayName = auth.currentUser?.displayName
+                        val nameToShow = if (!displayName.isNullOrEmpty()) displayName else email
+                        val prefs = getSharedPreferences("user_prefs", MODE_PRIVATE)
+                        prefs.edit().putString("username", nameToShow).apply()
+                    }
                     val displayName = auth.currentUser?.displayName
                     val nameToShow = if (!displayName.isNullOrEmpty()) displayName else email
 

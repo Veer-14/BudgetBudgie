@@ -107,7 +107,9 @@ class HomePage : AppCompatActivity() {
                 val budget = Budget(1, min, max)
 
                 lifecycleScope.launch {
-                    budgetRef.child("1").setValue(budget)
+                    val currentUserId = com.google.firebase.auth.FirebaseAuth
+                        .getInstance().currentUser?.uid ?: ""
+                    budgetRef.child(currentUserId).setValue(budget)
                     loadDashboard()
                 }
             }
@@ -117,54 +119,35 @@ class HomePage : AppCompatActivity() {
 
     //  RECENT EXPENSES
     private fun loadRecentExpenses() {
-
         val container = findViewById<LinearLayout>(R.id.recentContainer)
+        val currentUserId = com.google.firebase.auth.FirebaseAuth
+            .getInstance().currentUser?.uid ?: ""
 
-        val dbRef = FirebaseDatabase.getInstance().getReference("expenses")
-
-        dbRef.addValueEventListener(object : ValueEventListener {
-
-            override fun onDataChange(snapshot: DataSnapshot) {
-
-                val expenses = mutableListOf<Expense>()
-
-                for (child in snapshot.children) {
-
-                    val expense = child.getValue(Expense::class.java)
-
-                    if (expense != null) {
-                        expense.firebaseId = child.key
-                        expenses.add(expense)
+        // Only load expenses belonging to the current user
+        FirebaseDatabase.getInstance().getReference("expenses")
+            .orderByChild("userId").equalTo(currentUserId)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+                    val expenses = mutableListOf<Expense>()
+                    for (child in snapshot.children) {
+                        val expense = child.getValue(Expense::class.java)
+                        if (expense != null) {
+                            expense.firebaseId = child.key
+                            expenses.add(expense)
+                        }
+                    }
+                    container.removeAllViews()
+                    for (expense in expenses.reversed().take(5)) {
+                        val item = layoutInflater.inflate(R.layout.item_expense, container, false)
+                        item.findViewById<TextView>(R.id.tvDescription).text = expense.description
+                        item.findViewById<TextView>(R.id.tvCategory).text = expense.category
+                        item.findViewById<TextView>(R.id.tvDate).text = expense.date
+                        item.findViewById<TextView>(R.id.tvAmount).text = "R%.2f".format(expense.amount)
+                        container.addView(item)
                     }
                 }
-
-                container.removeAllViews()
-
-                // latest 5 expenses
-                for (expense in expenses.reversed().take(5)) {
-
-                    val item = layoutInflater.inflate(
-                        R.layout.item_expense,
-                        container,
-                        false
-                    )
-
-                    val tvDescription = item.findViewById<TextView>(R.id.tvDescription)
-                    val tvCategory = item.findViewById<TextView>(R.id.tvCategory)
-                    val tvDate = item.findViewById<TextView>(R.id.tvDate)
-                    val tvAmount = item.findViewById<TextView>(R.id.tvAmount)
-
-                    tvDescription.text = expense.description
-                    tvCategory.text = expense.category
-                    tvDate.text = expense.date
-                    tvAmount.text = "R%.2f".format(expense.amount)
-
-                    container.addView(item)
-                }
-            }
-
-            override fun onCancelled(error: DatabaseError) {}
-        })
+                override fun onCancelled(error: DatabaseError) {}
+            })
     }
 
     //  DASHBOARD
@@ -199,7 +182,12 @@ class HomePage : AppCompatActivity() {
         cardRecent.visibility = if (showRecent) View.VISIBLE else View.GONE
         rewardsCard.visibility = if (showRewards) View.VISIBLE else View.GONE
 
-        expenseRef.addValueEventListener(object : ValueEventListener {
+        val currentUserId = com.google.firebase.auth.FirebaseAuth
+            .getInstance().currentUser?.uid ?: ""
+
+// Only load expenses belonging to the current user
+        expenseRef.orderByChild("userId").equalTo(currentUserId)
+            .addValueEventListener(object : ValueEventListener {
 
             override fun onDataChange(snapshot: DataSnapshot) {
 
@@ -210,12 +198,26 @@ class HomePage : AppCompatActivity() {
                     if (exp != null) expenses.add(exp)
                 }
 
-                budgetRef.child("1").addListenerForSingleValueEvent(object : ValueEventListener {
+                val currentUserId = com.google.firebase.auth.FirebaseAuth
+                    .getInstance().currentUser?.uid ?: ""
+                budgetRef.child(currentUserId).addListenerForSingleValueEvent(object : ValueEventListener {
 
                     override fun onDataChange(budgetSnap: DataSnapshot) {
 
                         val budget = budgetSnap.getValue(Budget::class.java)
-                        if (budget == null) return
+                        if (budget == null) {
+                            // No budget set yet — reset all fields to zero for this user
+                            findViewById<TextView>(R.id.txtMin).text = "R0.00 min"
+                            findViewById<TextView>(R.id.txtMax).text = "R0.00 max"
+                            findViewById<TextView>(R.id.txtRemaining).text = "R0.00"
+                            findViewById<TextView>(R.id.txtPercentage).text = "0% used"
+                            findViewById<TextView>(R.id.txtTotalSpent).text = "R0.00"
+                            findViewById<TextView>(R.id.txtExpenseCount).text = "0"
+                            findViewById<android.widget.ProgressBar>(R.id.progressBar).progress = 0
+                            findViewById<android.widget.ProgressBar>(R.id.progressSeeds).progress = 0
+                            updateBudgie(0)
+                            return
+                        }
 
                         val max = budget.maxAmount
                         val min = budget.minAmount
@@ -236,7 +238,10 @@ class HomePage : AppCompatActivity() {
                         val level = (seeds / 100) + 1
                         val progress = seeds % 100
 
-                        val gamePrefs = getSharedPreferences("game", MODE_PRIVATE)
+
+                        val currentUserId = com.google.firebase.auth.FirebaseAuth
+                            .getInstance().currentUser?.uid ?: ""
+                        val gamePrefs = getSharedPreferences("game_$currentUserId", MODE_PRIVATE)
                         gamePrefs.edit().putInt("seeds", seeds).apply()
 
                         val greeting = findViewById<TextView>(R.id.txtGreeting)
