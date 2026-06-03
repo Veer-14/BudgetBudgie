@@ -1,10 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="#0F172A"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <!-- SCROLL CONTENT -->
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -16,7 +16,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
-            <!-- HEADER -->
             <TextView
                 android:text="Analytics"
                 android:textColor="#FFFFFF"
@@ -33,7 +32,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
 
-            <!-- PERIOD CARD -->
             <LinearLayout
                 android:orientation="vertical"
                 android:background="#1E293B"
@@ -43,55 +41,54 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:text="Period"
-                    android:textColor="#9CA3AF"
-                    android:textSize="12sp"
+                    android:text="Period Filter"
+                    android:textColor="#FFFFFF"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
+
+                <EditText
+                    android:id="@+id/etStartDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:hint="Start Date (YYYY-MM-DD)"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#9CA3AF"/>
+
+                <EditText
+                    android:id="@+id/etEndDate"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:focusable="false"
+                    android:clickable="true"
+                    android:hint="End Date (YYYY-MM-DD)"
+                    android:textColor="#FFFFFF"
+                    android:textColorHint="#9CA3AF"/>
+
+                <Button
+                    android:id="@+id/btnFilter"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="Apply Filter"/>
 
                 <TextView
-                    android:text="This Month"
+                    android:id="@+id/tvTotalSpent"
+                    android:text="R0.00"
                     android:textColor="#FFFFFF"
-                    android:textSize="14sp"
+                    android:textSize="18sp"
                     android:textStyle="bold"
-                    android:layout_marginBottom="12dp"
+                    android:layout_marginTop="12dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="1dp"
-                    android:background="#334155"
-                    android:layout_marginBottom="12dp"/>
-
-                <LinearLayout
-                    android:orientation="horizontal"
-                    android:gravity="center_vertical"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content">
-
-                    <TextView
-                        android:text="Total spent in period:"
-                        android:textColor="#9CA3AF"
-                        android:textSize="14sp"
-                        android:layout_width="0dp"
-                        android:layout_weight="1"
-                        android:layout_height="wrap_content"/>
-
-                    <TextView
-                        android:id="@+id/tvTotalSpent"
-                        android:text="R0.00"
-                        android:textColor="#FFFFFF"
-                        android:textSize="18sp"
-                        android:textStyle="bold"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"/>
-
-                </LinearLayout>
 
             </LinearLayout>
 
-            <!-- PIE CHART CARD -->
             <LinearLayout
                 android:orientation="vertical"
                 android:background="#1E293B"
@@ -116,7 +113,6 @@
 
             </LinearLayout>
 
-            <!-- CATEGORY TOTALS CARD -->
             <LinearLayout
                 android:orientation="vertical"
                 android:background="#1E293B"
@@ -142,12 +138,10 @@
 
             </LinearLayout>
 
-            <!-- SUMMARY CARD -->
             <LinearLayout
                 android:orientation="vertical"
                 android:background="#1E293B"
                 android:padding="12dp"
-                android:layout_marginBottom="16dp"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
 
@@ -156,7 +150,6 @@
                     android:text="Total Budget: R0"
                     android:textColor="#9CA3AF"
                     android:textSize="14sp"
-                    android:layout_marginBottom="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -165,7 +158,6 @@
                     android:text="Remaining: R0"
                     android:textColor="#22C55E"
                     android:textSize="14sp"
-                    android:layout_marginBottom="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -174,7 +166,6 @@
                     android:text="Budgets: 0"
                     android:textColor="#FFFFFF"
                     android:textSize="14sp"
-                    android:layout_marginBottom="8dp"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"/>
 
@@ -192,7 +183,6 @@
 
     </ScrollView>
 
-    <!-- BOTTOM NAV -->
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottomNav"
         android:layout_width="match_parent"

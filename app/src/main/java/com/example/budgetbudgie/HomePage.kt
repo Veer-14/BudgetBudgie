@@ -26,7 +26,7 @@ class HomePage : AppCompatActivity() {
 
     private var username: String? = null
 
-    // ✅ FIX: class-level references for card visibility
+    // FIX: class-level references for card visibility
     private lateinit var cardBudget: View
     private lateinit var cardSpent: View
     private lateinit var cardExpenses: View
@@ -46,7 +46,7 @@ class HomePage : AppCompatActivity() {
 
 
 
-        // ✅ FIX: initialize cards properly
+        //  FIX: initialize cards properly
         cardBudget = findViewById(R.id.cardBudget)
         cardSpent = findViewById(R.id.cardSpent)
         cardExpenses = findViewById(R.id.cardExpenses)
@@ -89,7 +89,7 @@ class HomePage : AppCompatActivity() {
         }
     }
 
-    // ---------------- BUDGET DIALOG ----------------
+    // BUDGET DIALOG
     private fun showBudgetDialog() {
         val view = layoutInflater.inflate(R.layout.dialog_budget, null)
 
@@ -115,7 +115,7 @@ class HomePage : AppCompatActivity() {
             .show()
     }
 
-    // ---------------- RECENT EXPENSES ----------------
+    //  RECENT EXPENSES
     private fun loadRecentExpenses() {
 
         val container = findViewById<LinearLayout>(R.id.recentContainer)
@@ -167,7 +167,7 @@ class HomePage : AppCompatActivity() {
         })
     }
 
-    // ---------------- DASHBOARD ----------------
+    //  DASHBOARD
     private fun loadDashboard() {
 
         val minText = findViewById<TextView>(R.id.txtMin)
@@ -274,7 +274,7 @@ class HomePage : AppCompatActivity() {
     }
 
 
-    // ---------------- BOTTOM NAV ----------------
+    // BOTTOM NAV
     private fun setupBottomNav() {
         val bottomNav = findViewById<BottomNavigationView>(R.id.bottomNav)
         bottomNav.selectedItemId = R.id.home
@@ -309,7 +309,7 @@ class HomePage : AppCompatActivity() {
         }
     }
 
-    // ---------------- TOP BUTTONS ----------------
+    // TOP BUTTONS
     private fun setupTopButtons() {
 
         findViewById<ImageView>(R.id.btnLogout).setOnClickListener {
@@ -332,7 +332,7 @@ class HomePage : AppCompatActivity() {
         }
     }
 
-    // ---------------- QUICK ACTIONS ----------------
+    // QUICK ACTIONS
     private fun setupQuickActions() {
 
         findViewById<View>(R.id.btnAddExpense).setOnClickListener {
